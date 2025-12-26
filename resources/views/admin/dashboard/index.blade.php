@@ -1,27 +1,225 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Admin Dashboard') }}
-        </h2>
-    </x-slot>
+@extends('admin.layouts.app')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <!-- Authentication -->
-                <form method="POST" action="{{ route('admin.logout') }}">
-                    @csrf
+@section('contents')
+    <div class="container-xl">
+        <div class="row row-deck row-cards">
+             <div class="col-12">
+                <div class="row row-cards">
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="card card-sm">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-auto">
+                                        <span
+                                            class="bg-warning avatar text-white"><!-- Download SVG icon from http://tabler.io/icons/icon/currency-dollar -->
+                                            <i class="ti ti-shopping-bag-exclamation"></i></span>
+                                    </div>
+                                    <div class="col">
+                                        <div class="font-weight-medium">10 Orders</div>
+                                        <div class="text-secondary">Total Pending Orders</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                    <x-dropdown-link :href="route('admin.logout')"
-                        onclick="event.preventDefault();
-                         this.closest('form').submit();">
-                        {{ __('Amin Log Out') }}
-                    </x-dropdown-link>
-                </form>
-                <div class="p-6 text-gray-900">
-                    {{ __("You're logged in!") }}
+                    {{-- <div class="col-sm-6 col-lg-3">
+                        <div class="card card-sm">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-auto">
+                                        <span
+                                            class="bg-success avatar text-white"><!-- Download SVG icon from http://tabler.io/icons/icon/currency-dollar -->
+                                            <i class="ti ti-shopping-bag-heart"></i></span>
+                                    </div>
+                                    <div class="col">
+                                        <div class="font-weight-medium">{{ $completedOrders }} Orders</div>
+                                        <div class="text-secondary">Total Completed Orders</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="card card-sm">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-auto">
+                                        <span
+                                            class="bg-danger avatar text-white"><!-- Download SVG icon from http://tabler.io/icons/icon/currency-dollar -->
+                                            <i class="ti ti-shopping-bag-x"></i>
+                                        </span>
+                                    </div>
+                                    <div class="col">
+                                        <div class="font-weight-medium">{{ $canceledOrders }} Orders</div>
+                                        <div class="text-secondary">Total Cancelled Orders</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="card card-sm">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-auto">
+                                        <span
+                                            class="bg-primary avatar text-white"><!-- Download SVG icon from http://tabler.io/icons/icon/currency-dollar -->
+                                            <i class="ti ti-shopping-bag-plus"></i></span>
+                                    </div>
+                                    <div class="col">
+                                        <div class="font-weight-medium">{{ $totalOrders }} Orders</div>
+                                        <div class="text-secondary">Total Orders</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="card card-sm">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-auto">
+                                        <span
+                                            class="bg-success avatar text-white"><!-- Download SVG icon from http://tabler.io/icons/icon/currency-dollar -->
+                                            <i class="ti ti-box"></i></span>
+                                    </div>
+                                    <div class="col">
+                                        <div class="font-weight-medium">{{ $totalProducts }} Items</div>
+                                        <div class="text-secondary">Total Products</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="card card-sm">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-auto">
+                                        <span
+                                            class="bg-warning avatar text-white"><!-- Download SVG icon from http://tabler.io/icons/icon/currency-dollar -->
+                                            <i class="ti ti-box"></i></span>
+                                    </div>
+                                    <div class="col">
+                                        <div class="font-weight-medium">{{ $totalPendingProducts }} Items</div>
+                                        <div class="text-secondary">Total Pending Products</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="card card-sm">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-auto">
+                                        <span
+                                            class="bg-success avatar text-white"><!-- Download SVG icon from http://tabler.io/icons/icon/currency-dollar -->
+                                            <i class="ti ti-box"></i></span>
+                                    </div>
+                                    <div class="col">
+                                        <div class="font-weight-medium">{{ $totalApprovedProducts }} Items</div>
+                                        <div class="text-secondary">Total Approved Products</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="card card-sm">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-auto">
+                                        <span
+                                            class="bg-danger avatar text-white"><!-- Download SVG icon from http://tabler.io/icons/icon/currency-dollar -->
+                                            <i class="ti ti-box"></i></span>
+                                    </div>
+                                    <div class="col">
+                                        <div class="font-weight-medium">{{ $totalRejectedProducts }} Items</div>
+                                        <div class="text-secondary">Total Rejected Products</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="card card-sm">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-auto">
+                                        <span class="bg-warning avatar text-white">
+                                            <i class="ti ti-user"></i></span>
+                                    </div>
+                                    <div class="col">
+                                        <div class="font-weight-medium">{{ $totalPendingKycRequests }} Kyc's</div>
+                                        <div class="text-secondary">Total Pending Requests</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="card card-sm">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-auto">
+                                        <span class="bg-success avatar text-white">
+                                            <i class="ti ti-user-check"></i>
+                                        </span>
+                                    </div>
+                                    <div class="col">
+                                        <div class="font-weight-medium">{{ $totalApprovedKycRequests }} Kyc's</div>
+                                        <div class="text-secondary">Total Approved Requests</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="card card-sm">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-auto">
+                                        <span class="bg-danger avatar text-white">
+                                            <i class="ti ti-user-x"></i></span>
+                                    </div>
+                                    <div class="col">
+                                        <div class="font-weight-medium">{{ $totalRejectedKycRequests }} Kyc's</div>
+                                        <div class="text-secondary">Total Rejected Requests</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="card card-sm">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-auto">
+                                        <span class="bg-purple avatar text-white">
+                                            <i class="ti ti-user"></i></span>
+                                    </div>
+                                    <div class="col">
+                                        <div class="font-weight-medium">{{ $totalKycRequests }} Kyc's</div>
+                                        <div class="text-secondary">Total Requests</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> --}}
+
                 </div>
+
+
             </div>
         </div>
     </div>
-</x-app-layout>
+@endsection

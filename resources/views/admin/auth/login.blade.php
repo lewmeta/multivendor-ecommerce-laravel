@@ -1,47 +1,92 @@
-<x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+<!doctype html>
 
-    <form method="POST" action="{{ route('admin.login') }}">
-        @csrf
+<html lang="en">
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Emails')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>{{ __('Sign in') }}</title>
+    <!-- BEGIN GLOBAL MANDATORY STYLES -->
+    <link href="{{ asset('assets/admin/dist/css/tabler.css') }}" rel="stylesheet" />
+    <!-- END GLOBAL MANDATORY STYLES -->
+    <!-- BEGIN CUSTOM FONT -->
+    <style>
+        @import url("https://rsms.me/inter/inter.css");
+    </style>
+    <!-- END CUSTOM FONT -->
+</head>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Admin Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-            </label>
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('admin.password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('admin.password.request') }}">
-                    {{ __('Forgot your password?') }}
+<body>
+    <!-- BEGIN GLOBAL THEME SCRIPT -->
+    <script src="./dist/js/tabler-theme.min.js?1750026890"></script>
+    <!-- END GLOBAL THEME SCRIPT -->
+    <div class="page page-center">
+        <div class="container-tight container py-4">
+            <div class="mb-4 text-center">
+                <!-- BEGIN NAVBAR LOGO -->
+                <a href="javascript:;" aria-label="Tabler" class="navbar-brand navbar-brand-autodark"><img
+                        src="{{ asset(config('settings.site_logo')) }}" alt="">
                 </a>
-            @endif
+                <!-- END NAVBAR LOGO -->
+            </div>
+            <div class="card card-md">
+                <div class="card-body">
+                    <h2 class="h2 mb-4 text-center">{{ __('Login to your account') }}</h2>
 
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
+                    <!-- Session Status -->
+                    <x-auth-session-status class="mb-4" :status="session('status')" />
+
+                    <form action="{{ route('admin.login') }}" method="POST" autocomplete="off" novalidate>
+                        @csrf
+                        <div class="mb-3">
+                            <label class="form-label">Email address</label>
+                            <input type="email" name="email" :value="old('email')" class="form-control"
+                                placeholder="your@email.com" autocomplete="off" />
+                            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+
+                        </div>
+
+                        <div class="mb-2">
+                            <label class="form-label">
+                                {{ __('Password') }}
+                                <span class="form-label-description">
+                                    <a href="{{ route('admin.password.request') }}">{{ __("I forgot password") }}</a>
+                                </span>
+                            </label>
+                            <div class="input-group input-group-flat">
+                                <input type="password" name="password" class="form-control" placeholder="Your password"
+                                    autocomplete="off" />
+                                <span class="input-group-text">
+                                    <a href="#" class="link-secondary" title="Show password"
+                                        data-bs-toggle="tooltip"><!-- Download SVG icon from http://tabler.io/icons/icon/eye -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
+                                            <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                                            <path
+                                                d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
+                                        </svg></a>
+                                </span>
+                            </div>
+                        </div>
+
+
+                        <div class="mb-2">
+                            <label class="form-check">
+                                <input type="checkbox" class="form-check-input" name="remember" />
+                                <span class="form-check-label">{{ __('Remember me on this device') }}</span>
+                            </label>
+                        </div>
+
+                        <div class="form-footer">
+                            <button type="submit" class="btn btn-primary w-100">{{ __('Sign in') }}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-    </form>
-</x-guest-layout>
+    </div>
+</body>
+
+</html>
