@@ -103,11 +103,11 @@
                                                         class="fi fi-rs-user mr-10"></i>Dashboard</a>
                                             </li>
                                             <li>
-                                                <a href="{{ route('profile') }}"><i class="fi fi-rs-user mr-10"></i>My
+                                                <a href="#"><i class="fi fi-rs-user mr-10"></i>My
                                                     Account</a>
                                             </li>
                                             <li>
-                                                <a href="{{ route('orders.index') }}"><i
+                                                <a href="#"><i
                                                         class="fi fi-rs-location-alt mr-10"></i>Order
                                                     Tracking</a>
                                             </li>
