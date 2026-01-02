@@ -11,28 +11,23 @@
                             <div class="dashboard-menu">
                                 <ul class="nav flex-column" role="tablist">
                                     <li class="nav-item">
-                                        <a class="nav-link"
-                                            href="#"><i
+                                        <a class="nav-link" href="{{ route('dashboard') }}"><i
                                                 class="fi-rs-settings-sliders mr-10"></i>Dashboard</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link"
-                                            href="#"><i
+                                        <a class="nav-link" href="#"><i
                                                 class="fi-rs-shopping-bag mr-10"></i>Orders</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link"
-                                            href="#"><i
-                                                class="fi-rs-shopping-bag mr-10"></i>Purchased Products</a>
+                                        <a class="nav-link" href="#"><i class="fi-rs-shopping-bag mr-10"></i>Purchased
+                                            Products</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link"
-                                            href="#"><i
+                                        <a class="nav-link" href="#"><i
                                                 class="fi-rs-shopping-cart-check mr-10"></i>Track Your Order</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link"
-                                            href="#"><i class="fi fi-rs-star mr-10"></i> Reviews</a>
+                                        <a class="nav-link" href="#"><i class="fi fi-rs-star mr-10"></i> Reviews</a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" href="#">
@@ -40,12 +35,11 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link"
-                                            href="#"><i class="fi-rs-marker mr-10"></i>My
+                                        <a class="nav-link" href="#"><i class="fi-rs-marker mr-10"></i>My
                                             Address</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="#"><i
+                                        <a class="nav-link" href="{{ route('profile') }}"><i
                                                 class="fi-rs-user mr-10"></i>Account
                                             details</a>
                                     </li>
