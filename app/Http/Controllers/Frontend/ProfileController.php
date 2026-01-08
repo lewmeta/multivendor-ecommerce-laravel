@@ -4,14 +4,15 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Services\AlertService;
+use App\Traits\FileUploadTrait;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
-use function Flasher\Prime\flash;
-
 class ProfileController extends Controller
 {
+    use FileUploadTrait;
+
     public function index(): View
     {
         return view('frontend.dashboard.account.index');
@@ -19,6 +20,7 @@ class ProfileController extends Controller
 
     function update(Request $request): RedirectResponse
     {
+        // dd($request->all());
         // Validate and update the user's profile information here.
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -27,10 +29,10 @@ class ProfileController extends Controller
         ]);
 
         $user = auth('web')->user();
-        // if ($request->hasFile('avatar')) {
-        //     $filepath = $this->uploadFile($request->file('avatar'), $user->avatar);
-        //     $filepath ? $user->avatar = $filepath : null;
-        // }
+        if ($request->hasFile('avatar')) {
+            $filepath = $this->uploadFile($request->file('avatar'), $user->avatar);
+            $filepath ? $user->avatar = $filepath : null;
+        }
 
         $user->name = $request->name;
         $user->email = $request->email;
@@ -47,6 +49,10 @@ class ProfileController extends Controller
         ]);
 
         $user = auth('web')->user();
+        if ($request->hasFile('avatar')) {
+            $filepath = $this->uploadFile($request->file('avatar'), $user->avatar);
+            $filepath ? $user->avatar = $filepath : null;
+        }
         $user->password = bcrypt($request->password);
         $user->save();
 

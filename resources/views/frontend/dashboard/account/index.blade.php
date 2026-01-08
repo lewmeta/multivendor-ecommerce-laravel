@@ -13,8 +13,13 @@
                     @method('PUT')
                     <div class="row mt-30">
 
-                        {{-- <x-input-image imageUploadId="image-upload" imagePreviewId="image-preview"
-                            imageLabelId="image-label" name="avatar" :image="auth('web')->user()->avatar" /> --}}
+                        <div class="size-[20px] overflow-hidden rounded-full">
+                            <x-input-image imageUploadId="image-upload" imagePreviewId="image-preview" imageLabelId="image-label" name="avatar" :image="auth('web')->user()->avatar" />
+                        </div>
+                        {{-- <div class="image-preview">
+                            <label for="image-upload" id="image-label">Choose File</label>
+                            <input type="file" name="image" id="image-upload">
+                        </div> --}}
 
                         <div class="form-group col-md-12">
                             <label>{{ __('Name') }} <span class="required">*</span></label>
@@ -79,3 +84,18 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $.uploadPreview({
+                input_field: "#image-upload", // Default: .image-upload
+                preview_box: "#image-preview", // Default: .image-preview
+                label_field: "#image-label", // Default: .image-label
+                label_default: "Choose File", // Default: Choose File
+                label_selected: "Change File", // Default: Change File
+                no_label: false // Default: false
+            });
+        });
+    </script>
+@endpush
