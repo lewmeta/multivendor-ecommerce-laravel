@@ -855,7 +855,7 @@
                       <a href="#" class="nav-link d-flex lh-1 p-0 px-2" data-bs-toggle="dropdown"
                           aria-label="Open user menu">
                           <span class="avatar avatar-sm"
-                              style="background-image: url({{ asset(auth('admin')->user()->avatar) }})">
+                              style="background-image: url({{ asset(auth('admin')->user()?->avatar) }})">
                           </span>
                           <div class="d-none d-xl-block ps-2">
                               <div>{{ auth('admin')->user()->name }}</div>
