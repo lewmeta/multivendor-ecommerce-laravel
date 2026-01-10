@@ -855,22 +855,22 @@
                       <a href="#" class="nav-link d-flex lh-1 p-0 px-2" data-bs-toggle="dropdown"
                           aria-label="Open user menu">
                           <span class="avatar avatar-sm"
-                              style="background-image: url({{ asset(auth('admin')->user()?->avatar) }})">
+                              style="background-image: url({{ asset(auth('web')->user()->avatar) }})">
                           </span>
                           <div class="d-none d-xl-block ps-2">
-                              <div>{{ auth('admin')->user()->name }}</div>
+                              <div>{{ auth('web')->user()->name }}</div>
                               {{-- <div class="small text-secondary mt-1">
                                   {{ auth('admin')->user()?->getRoleNames()?->first() }}</div> --}}
                           </div>
                       </a>
                       <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                          <a href="{{ route('admin.profile.index') }}" class="dropdown-item">Profile</a>
+                          <a href="{{ route('vendor.profile.index') }}" class="dropdown-item">Profile</a>
                           <div class="dropdown-divider"></div>
                           <a href="#" class="dropdown-item">Settings</a>
                           <a onclick="event.preventDefault();
                                 $('.logout-form').submit();"
                               href="" class="dropdown-item">Logout</a>
-                          <form method="POST" action="{{ route('admin.logout') }}" class="logout-form">
+                          <form method="POST" action="{{ route('logout') }}" class="logout-form">
                               @csrf
                           </form>
                       </div>

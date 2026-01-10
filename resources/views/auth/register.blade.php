@@ -59,7 +59,7 @@
                                         <div class="form-group mb-0">
                                             <button type="submit"
                                                 class="btn btn-fill-out btn-block hover-up font-weight-bold"
-                                                name="login">{{ __('Submit &amp; Register') }}</button>
+                                                name="login">{{ __('Submit & Register') }}</button>
                                         </div>
                                     </form>
                                 </div>
