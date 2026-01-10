@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
@@ -39,11 +40,16 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'user_type' => $request->user_type,
         ]);
 
         event(new Registered($user));
 
         Auth::login($user);
+
+        Log::debug('User created', ['User type' => $request->user_type, 'name' => $request->name ]);
+        
+        if (auth('web')->user()->user_type === 'vendor') return redirect(route('vendor.dashboard', absolute: false));
 
         return redirect(route('dashboard', absolute: false));
     }
