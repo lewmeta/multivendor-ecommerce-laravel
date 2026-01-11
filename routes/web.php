@@ -4,6 +4,8 @@ use App\Http\Controllers\Frontend\ProfileController;
 use App\Http\Controllers\Frontend\UserDashboardController;
 use App\Http\Controllers\Frontend\VendorDashboardController;
 use App\Http\Controllers\Frontend\VendorProfileController;
+use App\Http\Controllers\Frontend\KycController;
+use App\Http\Controllers\Frontend\StoreController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -36,6 +38,10 @@ Route::group(['prefix' => 'vendor', 'as' => 'vendor.', 'middleware' => ['auth', 
     Route::get('/profile', [VendorProfileController::class, 'index'])->name('profile.index');
     Route::put('/profile', [VendorProfileController::class, 'update'])->name('profile.update');
 
+    /**
+     * Store profile (Resource controller)
+     */
+    Route::resource('/store-profile', StoreController::class);
 });
 
 require __DIR__.'/auth.php';

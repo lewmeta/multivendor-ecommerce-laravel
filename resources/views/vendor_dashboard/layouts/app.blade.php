@@ -80,7 +80,7 @@
     <script src="{{ asset('assets/admin/dist/libs/litepicker/dist/litepicker.js') }}" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="{{ asset('assets/admin/dist/js/tabler.min.js') }}" defer></script>
-    {{-- @include('admin.layouts.scripts') --}}
+    @include('admin.layouts.scripts')
     @stack('scripts')
     <!-- END GLOBAL MANDATORY SCRIPTS -->
 </body>
