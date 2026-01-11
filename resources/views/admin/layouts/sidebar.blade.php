@@ -228,8 +228,8 @@
                           </a>
                       </li>
 
-                      {{-- @if (hasPermission(['KYC Management']))
-                          <li class="nav-item dropdown {{ setActive(['admin.kyc.*']) }}">
+                      {{-- @if (hasPermission(['KYC Management'])) --}}
+                          <li class="nav-item dropdown">
                               <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
                                   data-bs-auto-close="false" role="button" aria-expanded="false">
                                   <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -237,18 +237,18 @@
                                   </span>
                                   <span class="nav-link-title"> KYC Requests </span>
                               </a>
-                              <div class="dropdown-menu {{ setActive(['admin.kyc.*'], 'show') }}">
+                              <div class="dropdown-menu">
                                   <div class="dropdown-menu-columns">
                                       <div class="dropdown-menu-column">
-                                          <a class="dropdown-item {{ setActive(['admin.kyc.index']) }}"
+                                          <a class="dropdown-item"
                                               href="{{ route('admin.kyc.index') }}">
                                               All Requests
                                           </a>
-                                          <a class="dropdown-item {{ setActive(['admin.kyc.pending']) }}"
+                                          <a class="dropdown-item"
                                               href="{{ route('admin.kyc.pending') }}">
                                               Pending Requests
                                           </a>
-                                          <a class="dropdown-item {{ setActive(['admin.kyc.rejected']) }}"
+                                          <a class="dropdown-item"
                                               href="{{ route('admin.kyc.rejected') }}">
                                               Rejected Requests
                                           </a>
@@ -258,7 +258,7 @@
                                   </div>
                               </div>
                           </li>
-                      @endif --}}
+                      {{-- @endif --}}
                       {{-- @if (hasPermission(['Category Management', 'Tags Management', 'Brand Management']))
                           <li
                               class="nav-item dropdown {{ setActive(['admin.products.*', 'admin.categories.*', 'admin.brands.*', 'admin.tags.*', 'admin.reviews.*']) }}">
@@ -855,7 +855,7 @@
                       <a href="#" class="nav-link d-flex lh-1 p-0 px-2" data-bs-toggle="dropdown"
                           aria-label="Open user menu">
                           <span class="avatar avatar-sm"
-                              style="background-image: url({{ asset(auth('admin')->user()->avatar) }})">
+                              style="background-image: url({{ asset(auth('admin')->user()?->avatar) }})">
                           </span>
                           <div class="d-none d-xl-block ps-2">
                               <div>{{ auth('admin')->user()->name }}</div>

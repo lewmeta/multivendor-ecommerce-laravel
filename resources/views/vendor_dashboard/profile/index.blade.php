@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('vendor_dashboard.layouts.app')
 
 @section('contents')
     <div class="container-xl">
@@ -13,7 +13,7 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="mb-3">
-                                <x-input-image imageUploadId="image-upload" imagePreviewId="image-preview" imageLabelId="image-label" name="avatar" :image="asset(auth('admin')->user()->avatar)" />
+                                <x-input-image imageUploadId="image-upload" imagePreviewId="image-preview" imageLabelId="image-label" name="avatar" :image="asset(auth('web')->user()->avatar)" />
                                 <x-input-error :messages="$errors->get('avatar')" class="mt-2" />
                             </div>
                         </div>
@@ -22,7 +22,7 @@
                                 <div class="mb-3">
                                     <label class="form-label required">Name</label>
                                     <input type="text" class="form-control" name="name" placeholder=""
-                                        value="{{ auth('admin')->user()->name }}">
+                                        value="{{ auth('web')->user()->name }}">
                                     <x-input-error :messages="$errors->get('name')" class="mt-2" />
                                 </div>
                             </div>
@@ -31,7 +31,7 @@
                                 <div class="mb-3">
                                     <label class="form-label required">Email</label>
                                     <input type="email" class="form-control" name="email" placeholder=""
-                                        value="{{ auth('admin')->user()->email }}">
+                                        value="{{ auth('web')->user()->email }}">
                                     <x-input-error :messages="$errors->get('email')" class="mt-2" />
                                 </div>
                             </div>

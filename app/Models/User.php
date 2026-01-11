@@ -53,14 +53,6 @@ class User extends Authenticatable
      */
     public function kyc(): HasOne
     {
-        return $this->hasOne(kyc::class, 'user_id', 'id');
-    }
-
-    /**
-     * Get user's store
-     */
-    public function store(): HasOne
-    {
-        return $this->hasOne(Store::class, 'seller_id');
+        return $this->hasOne(Kyc::class, 'user_id', 'id');
     }
 }
