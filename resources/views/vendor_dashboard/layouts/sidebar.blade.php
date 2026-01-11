@@ -1,4 +1,4 @@
-      <aside class="navbar navbar-vertical navbar-expand-lg d-print-none" data-bs-theme="dark">
+      <aside class="navbar navbar-vertical navbar-expand-lg" data-bs-theme="dark">
           <div class="container-fluid">
               <!-- BEGIN NAVBAR TOGGLER -->
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar-menu"
@@ -8,8 +8,8 @@
               <!-- END NAVBAR TOGGLER -->
               <!-- BEGIN NAVBAR LOGO -->
               <div class="navbar-brand navbar-brand-autodark">
-                  <a href="." aria-label="Tabler"><img
-                          style="width: 100px; background: #fafafa; padding: 10px; border-radius: 5px;"
+                  <a href="{{ route('vendor.dashboard') }}" aria-label="Tabler"><img
+                          style="width: 100px; width: 100px; background: #fafafa; padding: 10px; border-radius: 5px;"
                           src="{{ asset(config('settings.site_logo')) }}" alt=""></a>
               </div>
               <!-- END NAVBAR LOGO -->
@@ -221,454 +221,129 @@
                   <ul class="navbar-nav pt-lg-3">
                       <li class="nav-item">
                           <a class="nav-link"
-                              href="{{ route('admin.dashboard') }}">
-                              <span class="nav-link-icon d-md-none d-lg-inline-block"><i
-                                      class="ti ti-flame"></i></span>
-                              <span class="nav-link-title"> Dashboard </span>
+                              href="{{ route('vendor.dashboard') }}">
+                              <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                  <i class="ti ti-home"></i>
+                              </span>
+                              <span class="nav-link-title"> Home </span>
+                          </a>
+                      </li>
+                      <li
+                          class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
+                              data-bs-auto-close="false" role="button" aria-expanded="false">
+                              <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                  <i class="ti ti-shopping-cart"></i></span>
+                              <span class="nav-link-title"> Ecommerce </span>
+                          </a>
+                          <div
+                              class="dropdown-menu">
+                              <div class="dropdown-menu-columns">
+                                  <div class="dropdown-menu-column">
+                                      <div class="dropend">
+                                          <a class="dropdown-item"
+                                              href="#">Products</a>
+                                      </div>
+
+                                  </div>
+
+                              </div>
+                          </div>
+                      </li>
+                      <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
+                              data-bs-auto-close="false" role="button" aria-expanded="false">
+                              <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                  <i class="ti ti-shopping-bag"></i>
+                              </span>
+                              <span class="nav-link-title"> Orders </span>
+                          </a>
+                          <div class="dropdown-menu">
+                              <div class="dropdown-menu-columns">
+                                  <div class="dropdown-menu-column">
+                                      <a class="dropdown-item" href="#">
+                                          All Orders
+                                      </a>
+                                  </div>
+
+                                  {{-- <div class="dropdown-menu-column">
+                                      <a class="dropdown-item"
+                                          href="{{ route('vendor.orders.index', ['status' => 'pending']) }}">
+                                          Pending Orders
+                                      </a>
+                                  </div>
+
+                                  <div class="dropdown-menu-column">
+                                      <a class="dropdown-item"
+                                          href="{{ route('vendor.orders.index', ['status' => 'processed']) }}">
+                                          Processed Orders
+                                      </a>
+                                  </div>
+
+                                  <div class="dropdown-menu-column">
+                                      <a class="dropdown-item"
+                                          href="{{ route('vendor.orders.index', ['status' => 'packed']) }}">
+                                          Packed Orders
+                                      </a>
+                                  </div>
+
+                                  <div class="dropdown-menu-column">
+                                      <a class="dropdown-item"
+                                          href="">
+                                          Shipped Orders
+                                      </a>
+                                  </div> --}}
+                              </div>
+                          </div>
+                      </li>
+                      <li
+                          class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
+                              data-bs-auto-close="false" role="button" aria-expanded="false">
+                              <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                  <i class="ti ti-basket-dollar"></i>
+                              </span>
+                              <span class="nav-link-title"> Withdraws </span>
+                          </a>
+                          <div
+                              class="dropdown-menu">
+                              <div class="dropdown-menu-columns">
+                                  <div class="dropdown-menu-column">
+                                      <a class="dropdown-item" href="#">
+                                          Withdraw Methods
+                                      </a>
+                                  </div>
+                                  <div class="dropdown-menu-column">
+                                      <a class="dropdown-item"
+                                          >
+                                          Withdraw Requests
+                                      </a>
+                                  </div>
+
+
+                              </div>
+                          </div>
+                      </li>
+                      <li class="nav-item">
+                          <a class="nav-link"
+                              href="{{ route('vendor.store-profile.index') }}">
+                              <span
+                                  class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler.io/icons/icon/home -->
+                                  <i class="ti ti-user-scan"></i>
+                              </span>
+                              <span class="nav-link-title"> Store Profile </span>
                           </a>
                       </li>
 
-                      {{-- @if (hasPermission(['KYC Management']))
-                          <li class="nav-item dropdown {{ setActive(['admin.kyc.*']) }}">
-                              <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
-                                  data-bs-auto-close="false" role="button" aria-expanded="false">
-                                  <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                      <i class="ti ti-user-check"></i>
-                                  </span>
-                                  <span class="nav-link-title"> KYC Requests </span>
-                              </a>
-                              <div class="dropdown-menu {{ setActive(['admin.kyc.*'], 'show') }}">
-                                  <div class="dropdown-menu-columns">
-                                      <div class="dropdown-menu-column">
-                                          <a class="dropdown-item {{ setActive(['admin.kyc.index']) }}"
-                                              href="{{ route('admin.kyc.index') }}">
-                                              All Requests
-                                          </a>
-                                          <a class="dropdown-item {{ setActive(['admin.kyc.pending']) }}"
-                                              href="{{ route('admin.kyc.pending') }}">
-                                              Pending Requests
-                                          </a>
-                                          <a class="dropdown-item {{ setActive(['admin.kyc.rejected']) }}"
-                                              href="{{ route('admin.kyc.rejected') }}">
-                                              Rejected Requests
-                                          </a>
-
-                                      </div>
-
-                                  </div>
-                              </div>
-                          </li>
-                      @endif --}}
-                      {{-- @if (hasPermission(['Category Management', 'Tags Management', 'Brand Management']))
-                          <li
-                              class="nav-item dropdown {{ setActive(['admin.products.*', 'admin.categories.*', 'admin.brands.*', 'admin.tags.*', 'admin.reviews.*']) }}">
-                              <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
-                                  data-bs-auto-close="false" role="button" aria-expanded="false">
-                                  <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                      <i class="ti ti-box"></i>
-                                  </span>
-                                  <span class="nav-link-title"> Manage Products </span>
-                              </a>
-                              <div
-                                  class="dropdown-menu {{ setActive(['admin.products.*', 'admin.categories.*', 'admin.brands.*', 'admin.tags.*', 'admin.reviews.*'], 'show') }}">
-                                  <div class="dropdown-menu-columns">
-                                      @if (hasPermission(['Category Management']))
-                                          <div class="dropdown-menu-column">
-                                              <a class="dropdown-item {{ setActive(['admin.products.*']) }}"
-                                                  href="{{ route('admin.products.index') }}">
-                                                  Products
-                                              </a>
-                                          </div>
-                                      @endif
-
-
-                                      @if (hasPermission(['Category Management']))
-                                          <div class="dropdown-menu-column">
-                                              <a class="dropdown-item {{ setActive(['admin.categories.*']) }}"
-                                                  href="{{ route('admin.categories.index') }}">
-                                                  Categories
-                                              </a>
-                                          </div>
-                                      @endif
-
-                                      @if (hasPermission(['Tags Management']))
-                                          <div class="dropdown-menu-column">
-                                              <a class="dropdown-item {{ setActive(['admin.tags.*']) }}"
-                                                  href="{{ route('admin.tags.index') }}">
-                                                  Products Tags
-                                              </a>
-                                          </div>
-                                      @endif
-
-                                      @if (hasPermission(['Brand Management']))
-                                          <div class="dropdown-menu-column">
-                                              <a class="dropdown-item {{ setActive(['admin.brands.*']) }}"
-                                                  href="{{ route('admin.brands.index') }}">
-                                                  Brands
-                                              </a>
-                                          </div>
-                                      @endif
-
-
-
-
-                                      @if (hasPermission(['Brand Management']))
-                                          <div class="dropdown-menu-column">
-                                              <a class="dropdown-item {{ setActive(['admin.reviews.*']) }}"
-                                                  href="{{ route('admin.reviews.index') }}">
-                                                  Reviews
-                                              </a>
-                                          </div>
-                                      @endif
-
-                                  </div>
-                              </div>
-                          </li>
-                      @endif --}}
-
-                      {{-- @if (hasPermission(['Order Management']))
-                          <li class="nav-item dropdown {{ setActive(['admin.orders.*']) }}">
-                              <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
-                                  data-bs-auto-close="false" role="button" aria-expanded="false">
-                                  <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                      <i class="ti ti-shopping-bag-plus"></i>
-                                  </span>
-                                  <span class="nav-link-title"> Orders </span>
-                              </a>
-                              <div class="dropdown-menu {{ setActive(['admin.orders.*'], 'show') }}">
-                                  <div class="dropdown-menu-columns">
-                                      <div class="dropdown-menu-column">
-                                          <a class="dropdown-item" href="{{ route('admin.orders.index') }}">
-                                              All Orders
-                                          </a>
-                                      </div>
-                                      <div class="dropdown-menu-column">
-                                          <a class="dropdown-item"
-                                              href="{{ route('admin.orders.index', ['status' => 'pending']) }}">
-                                              Pending Orders
-                                          </a>
-                                      </div>
-
-                                      <div class="dropdown-menu-column">
-                                          <a class="dropdown-item"
-                                              href="{{ route('admin.orders.index', ['status' => 'processed']) }}">
-                                              Processed Orders
-                                          </a>
-                                      </div>
-
-                                      <div class="dropdown-menu-column">
-                                          <a class="dropdown-item"
-                                              href="{{ route('admin.orders.index', ['status' => 'packed']) }}">
-                                              Packed Orders
-                                          </a>
-                                      </div>
-
-                                      <div class="dropdown-menu-column">
-                                          <a class="dropdown-item"
-                                              href="{{ route('admin.orders.index', ['status' => 'shipped']) }}">
-                                              Shipped Orders
-                                          </a>
-                                      </div>
-
-                                      <div class="dropdown-menu-column">
-                                          <a class="dropdown-item"
-                                              href="{{ route('admin.orders.index', ['status' => 'in_transit']) }}">
-                                              In Transit
-                                          </a>
-                                      </div>
-                                      <div class="dropdown-menu-column">
-                                          <a class="dropdown-item"
-                                              href="{{ route('admin.orders.index', ['status' => 'out_for_delivery']) }}">
-                                              Out For Delivery
-                                          </a>
-                                      </div>
-                                      <div class="dropdown-menu-column">
-                                          <a class="dropdown-item"
-                                              href="{{ route('admin.orders.index', ['status' => 'delivered']) }}">
-                                              Delivered
-                                          </a>
-                                      </div>
-                                      <div class="dropdown-menu-column">
-                                          <a class="dropdown-item"
-                                              href="{{ route('admin.orders.index', ['status' => 'canceled']) }}">
-                                              Canceled
-                                          </a>
-                                      </div>
-                                  </div>
-                              </div>
-                          </li>
-                      @endif --}}
-
-                      {{-- @if (hasPermission(['Ecommerce Management']))
-                          <li
-                              class="nav-item dropdown {{ setActive(['admin.flash-sales.*', 'admin.coupons.*', 'admin.shipping-rules.*']) }}">
-                              <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
-                                  data-bs-auto-close="false" role="button" aria-expanded="false">
-                                  <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                      <i class="ti ti-dashboard"></i>
-                                  </span>
-                                  <span class="nav-link-title"> Ecommerce </span>
-                              </a>
-                              <div
-                                  class="dropdown-menu {{ setActive(['admin.flash-sales.*', 'admin.coupons.*', 'admin.shipping-rules.*'], 'show') }}">
-                                  <div class="dropdown-menu-columns">
-                                      <div class="dropdown-menu-column">
-                                          <a class="dropdown-item {{ setActive(['admin.flash-sales.*']) }}"
-                                              href="{{ route('admin.flash-sales.index') }}">
-                                              Flash Sales
-                                          </a>
-                                      </div>
-                                      <div class="dropdown-menu-column">
-                                          <a class="dropdown-item {{ setActive(['admin.coupons.*']) }}"
-                                              href="{{ route('admin.coupons.index') }}">
-                                              Coupons
-                                          </a>
-                                      </div>
-                                      <div class="dropdown-menu-column">
-                                          <a class="dropdown-item {{ setActive(['admin.shipping-rules.*']) }}"
-                                              href="{{ route('admin.shipping-rules.index') }}">
-                                              Shipping Rules
-                                          </a>
-                                      </div>
-                                  </div>
-                              </div>
-                          </li>
-                      @endif --}}
-
-                      {{-- @if (hasPermission(['Section Management']))
-                          <li
-                              class="nav-item dropdown {{ setActive(['admin.offer-sliders.*', 'admin.sliders.*', 'admin.hero-banners.*', 'admin.popular-categories.*', 'admin.product-sections.*', 'admin.our-features.*', 'admin.social-links.*']) }}">
-                              <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
-                                  data-bs-auto-close="false" role="button" aria-expanded="false">
-                                  <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                      <i class="ti ti-layout-dashboard"></i>
-                                  </span>
-                                  <span class="nav-link-title"> Manage Sections </span>
-                              </a>
-                              <div
-                                  class="dropdown-menu {{ setActive(['admin.offer-sliders.*', 'admin.sliders.*', 'admin.hero-banners.*', 'admin.popular-categories.*', 'admin.product-sections.*', 'admin.our-features.*', 'admin.social-links.*'], 'show') }}">
-                                  <div class="dropdown-menu-columns">
-
-                                      <div class="dropdown-menu-column">
-                                          <a class="dropdown-item {{ setActive(['admin.offer-sliders.*']) }}"
-                                              href="{{ route('admin.offer-sliders.index') }}">
-                                              Offer Slider
-                                          </a>
-                                      </div>
-
-                                      <div class="dropdown-menu-column">
-                                          <a class="dropdown-item {{ setActive(['admin.sliders.*']) }}"
-                                              href="{{ route('admin.sliders.index') }}">
-                                              Sliders
-                                          </a>
-                                      </div>
-                                      <div class="dropdown-menu-column">
-                                          <a class="dropdown-item {{ setActive(['admin.hero-banners.*']) }}"
-                                              href="{{ route('admin.hero-banners.index') }}">
-                                              Hero Banners
-                                          </a>
-                                      </div>
-
-                                      <div class="dropdown-menu-column">
-                                          <a class="dropdown-item {{ setActive(['admin.popular-categories.*']) }}"
-                                              href="{{ route('admin.popular-categories.index') }}">
-                                              Popular Category Products
-                                          </a>
-                                      </div>
-                                      <div class="dropdown-menu-column">
-                                          <a class="dropdown-item {{ setActive(['admin.product-sections.*']) }}"
-                                              href="{{ route('admin.product-sections.index') }}">
-                                              Products Section
-                                          </a>
-                                      </div>
-
-                                      <div class="dropdown-menu-column">
-                                          <a class="dropdown-item {{ setActive(['admin.our-features.*']) }}"
-                                              href="{{ route('admin.our-features.index') }}">
-                                              Our Features
-                                          </a>
-                                      </div>
-
-                                      <div class="dropdown-menu-column">
-                                          <a class="dropdown-item {{ setActive(['admin.social-links.*']) }}"
-                                              href="{{ route('admin.social-links.index') }}">
-                                              Social Links
-                                          </a>
-                                      </div>
-
-                                  </div>
-                              </div>
-                          </li>
-                      @endif --}}
-                      {{-- @if (hasPermission(['Subscriber Management']))
-                          <li class="nav-item">
-                              <a class="nav-link {{ setActive(['admin.subscribers.*']) }}"
-                                  href="{{ route('admin.subscribers.index') }}">
-                                  <span class="nav-link-icon d-md-none d-lg-inline-block"><i
-                                          class="ti ti-news"></i></span>
-                                  <span class="nav-link-title"> Subscribers </span>
-                              </a>
-                          </li>
-                      @endif --}}
-
-
-                      {{-- @if (hasPermission(['Withdraw Management']))
-                          <li
-                              class="nav-item dropdown {{ setActive(['admin.withdraw-methods.*', 'admin.withdraw-requests.*']) }}">
-                              <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
-                                  data-bs-auto-close="false" role="button" aria-expanded="false">
-                                  <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                      <i class="ti ti-currency-dollar"></i>
-                                  </span>
-                                  <span class="nav-link-title"> Withdraws </span>
-                              </a>
-                              <div
-                                  class="dropdown-menu {{ setActive(['admin.withdraw-methods.*', 'admin.withdraw-requests.*'], 'show') }}">
-                                  <div class="dropdown-menu-columns">
-                                      <div class="dropdown-menu-column">
-                                          <a class="dropdown-item {{ setActive(['admin.withdraw-methods.*']) }}"
-                                              href="{{ route('admin.withdraw-methods.index') }}">
-                                              Withdraw Methods
-                                          </a>
-                                      </div>
-
-                                      <div class="dropdown-menu-column">
-                                          <a class="dropdown-item {{ setActive(['admin.withdraw-requests.*']) }}"
-                                              href="{{ route('admin.withdraw-requests.index') }}">
-                                              Withdraw Requests
-                                          </a>
-                                      </div>
-
-                                  </div>
-                              </div>
-                          </li>
-                      @endif --}}
-
-
-                      {{-- @if (hasPermission(['Page Management'])) --}}
-                          <li class="nav-item">
-                              <a class="nav-link"
-                                  href="#">
-                                  <span class="nav-link-icon d-md-none d-lg-inline-block"><i
-                                          class="ti ti-ruler"></i></span>
-                                  <span class="nav-link-title"> Page Builder </span>
-                              </a>
-                          </li>
-                      {{-- @endif --}}
-                      {{-- @if (hasPermission(['Advertisement Management']))
-                          <li class="nav-item {{ setActive(['admin.banners.*']) }}">
-                              <a class="nav-link" href="{{ route('admin.banners.index') }}">
-                                  <span class="nav-link-icon d-md-none d-lg-inline-block"><i
-                                          class="ti ti-ad"></i></span>
-                                  <span class="nav-link-title"> Advertisement </span>
-                              </a>
-                          </li>
-                      @endif --}}
-                      {{-- @if (hasPermission(['Contact Management']))
-                          <li
-                              class="nav-item dropdown {{ setActive(['admin.contact-settings.*', 'admin.contact-messages.*']) }}">
-                              <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
-                                  data-bs-auto-close="false" role="button" aria-expanded="false">
-                                  <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                      <i class="ti ti-address-book"></i>
-                                  </span>
-                                  <span class="nav-link-title"> Contact </span>
-                              </a>
-                              <div
-                                  class="dropdown-menu {{ setActive(['admin.contact-settings.*', 'admin.contact-messages.*'], 'show') }}">
-                                  <div class="dropdown-menu-columns">
-                                      <div class="dropdown-menu-column">
-                                          <a class="dropdown-item {{ setActive(['admin.contact-settings.*']) }}"
-                                              href="{{ route('admin.contact-settings.index') }}">
-                                              Contact Setting
-                                          </a>
-                                      </div>
-
-                                      <div class="dropdown-menu-column">
-                                          <a class="dropdown-item {{ setActive(['admin.contact-messages.*']) }}"
-                                              href="{{ route('admin.contact-messages.index') }}">
-                                              Contact Messages
-                                          </a>
-                                      </div>
-
-                                  </div>
-                              </div>
-                          </li>
-                      @endif --}}
-
-
-
-                      {{-- @if (hasPermission(['Payment Setting']))
-                          <li class="nav-item">
-                              <a class="nav-link {{ setActive(['admin.payment-settings.*']) }}"
-                                  href="{{ route('admin.payment-settings.index') }}">
-                                  <span class="nav-link-icon d-md-none d-lg-inline-block"><i
-                                          class="ti ti-receipt-dollar"></i></span>
-                                  <span class="nav-link-title"> Payment Settings </span>
-                              </a>
-                          </li>
-                      @endif --}}
-
-                      {{-- @if (hasPermission(['Role Management', 'Role User Management']))
-                          <li class="nav-item dropdown {{ setActive(['admin.role.*', 'admin.role-users.*']) }}">
-                              <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
-                                  data-bs-auto-close="false" role="button" aria-expanded="false">
-                                  <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                      <i class="ti ti-shield"></i>
-                                  </span>
-                                  <span class="nav-link-title"> Access Management </span>
-                              </a>
-                              <div
-                                  class="dropdown-menu {{ setActive(['admin.role.*', 'admin.role-users.*'], 'show') }}">
-                                  <div class="dropdown-menu-columns">
-                                      @if (hasPermission(['Role Management']))
-                                          <div class="dropdown-menu-column">
-                                              <a class="dropdown-item {{ setActive(['admin.role.*']) }}"
-                                                  href="{{ route('admin.role.index') }}">
-                                                  Role
-                                              </a>
-                                          </div>
-                                      @endif
-
-                                      @if (hasPermission(['Role User Management']))
-                                          <div class="dropdown-menu-column">
-                                              <a class="dropdown-item {{ setActive(['admin.role-users.*']) }}"
-                                                  href="{{ route('admin.role-users.index') }}">
-                                                  Role Users
-                                              </a>
-                                          </div>
-                                      @endif
-
-                                  </div>
-                              </div>
-                          </li>
-                      @endif --}}
-
-                      {{-- @if (hasPermission(['Settings Management']))
-                          <li class="nav-item">
-                              <a class="nav-link {{ setActive(['admin.settings.*']) }}"
-                                  href="{{ route('admin.database-clear.index') }}">
-                                  <span class="nav-link-icon d-md-none d-lg-inline-block"><i
-                                          class="ti ti-skull"></i></span>
-                                  <span class="nav-link-title"> Database Wipe </span>
-                              </a>
-                          </li>
-                      @endif --}}
-
-
-                      {{-- @if (hasPermission(['Settings Management'])) --}}
-                          <li class="nav-item">
-                              <a class="nav-link"
-                                  href="#">
-                                  <span class="nav-link-icon d-md-none d-lg-inline-block"><i
-                                          class="ti ti-settings"></i></span>
-                                  <span class="nav-link-title"> Settings </span>
-                              </a>
-                          </li>
-                      {{-- @endif --}}
-
-
-
+                      <li class="nav-item">
+                          <a class="nav-link"
+                              href="{{ route('vendor.profile.index') }}">
+                              <span
+                                  class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler.io/icons/icon/home -->
+                                  <i class="ti ti-user-circle"></i></span>
+                              <span class="nav-link-title"> Settings </span>
+                          </a>
+                      </li>
 
                   </ul>
                   <!-- END NAVBAR MENU -->
@@ -854,19 +529,17 @@
                   <div class="nav-item dropdown">
                       <a href="#" class="nav-link d-flex lh-1 p-0 px-2" data-bs-toggle="dropdown"
                           aria-label="Open user menu">
-                          <span class="avatar avatar-sm"
-                              style="background-image: url({{ asset(auth('web')->user()->avatar) }})">
+                          <span class="avatar avatar-sm" style="background-image: url({{ asset(auth('web')->user()->avatar) }})">
                           </span>
                           <div class="d-none d-xl-block ps-2">
                               <div>{{ auth('web')->user()->name }}</div>
-                              {{-- <div class="small text-secondary mt-1">
-                                  {{ auth('admin')->user()?->getRoleNames()?->first() }}</div> --}}
+                              <div class="small text-secondary mt-1">Vendor</div>
                           </div>
                       </a>
                       <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                          <a href="{{ route('vendor.profile.index') }}" class="dropdown-item">Profile</a>
+                          <a href="{{ route('vendor.store-profile.index') }}" class="dropdown-item">Store Profile</a>
                           <div class="dropdown-divider"></div>
-                          <a href="#" class="dropdown-item">Settings</a>
+                          <a href="{{ route('vendor.profile.index') }}" class="dropdown-item">Settings</a>
                           <a onclick="event.preventDefault();
                                 $('.logout-form').submit();"
                               href="" class="dropdown-item">Logout</a>
