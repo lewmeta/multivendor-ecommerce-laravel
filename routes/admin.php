@@ -11,6 +11,8 @@ use App\Http\Controllers\Admin\Auth\RegisteredUserController;
 use App\Http\Controllers\Admin\Auth\VerifyEmailController;
 use App\Http\Controllers\Admin\KycRequestController;
 use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\UserRoleController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest:admin')->prefix('admin')->as('admin.')->group(function () {
@@ -71,4 +73,8 @@ Route::middleware('auth:admin')->prefix('admin')->as('admin.')->group(function (
     Route::get('/kyc-requests/{kyc_request}', [KycRequestController::class, 'show'])->name('kyc.show');
     Route::get('/kyc-requests/download', [KycRequestController::class, 'download'])->name('kyc.download');
     Route::put('/kyc-requests/{kyc_request}/update', [KycRequestController::class, 'update'])->name('kyc.update');
+
+    /** Role Management Routes */
+    Route::resource('/role', RoleController::class);
+    Route::resource('/role-users', UserRoleController::class);
 });

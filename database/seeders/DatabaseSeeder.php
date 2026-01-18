@@ -17,12 +17,16 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
         // Seed Admin user
-        $this->call(
-            \Database\Seeders\Admin\AdminSeeeder::class,
-        );
+        // $this->call(
+        //     \Database\Seeders\Admin\AdminSeeeder::class,
+        // );
+
+        // $this->call(
+        //     \Database\Seeders\Frontend\UserSeeder::class,
+        // );
 
         $this->call(
-            \Database\Seeders\Frontend\UserSeeder::class,
+            \Database\Seeders\Admin\PermissionSeeder::class,
         );
 
         // User::factory()->create([
