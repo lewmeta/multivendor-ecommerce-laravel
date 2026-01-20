@@ -228,7 +228,7 @@
                           </a>
                       </li>
 
-                      {{-- @if (hasPermission(['KYC Management'])) --}}
+                      @if (hasPermission(['KYC Management']))
                           <li class="nav-item dropdown">
                               <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
                                   data-bs-auto-close="false" role="button" aria-expanded="false">
@@ -258,7 +258,7 @@
                                   </div>
                               </div>
                           </li>
-                      {{-- @endif --}}
+                      @endif
                       {{-- @if (hasPermission(['Category Management', 'Tags Management', 'Brand Management']))
                           <li
                               class="nav-item dropdown {{ setActive(['admin.products.*', 'admin.categories.*', 'admin.brands.*', 'admin.tags.*', 'admin.reviews.*']) }}">
