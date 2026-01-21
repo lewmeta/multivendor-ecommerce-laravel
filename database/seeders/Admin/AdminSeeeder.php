@@ -5,6 +5,7 @@ namespace Database\Seeders\Admin;
 use App\Models\Admin;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
 
 class AdminSeeeder extends Seeder
 {
@@ -18,5 +19,18 @@ class AdminSeeeder extends Seeder
         $admin->email = 'admin@gmail.com';
         $admin->password = bcrypt('password');
         $admin->save();
+
+        /**
+         * Create Super Admin Role
+         */
+        Role::create([
+            'name' => 'Super Admin',
+            'guard_name' => 'admin',
+        ]);
+
+        /**
+         * Assign Role to Super Admin
+         */
+        $admin->assignRole('Super Admin');
     }
 }

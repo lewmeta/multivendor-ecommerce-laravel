@@ -91,8 +91,6 @@ class RoleController extends Controller
             return to_route('admin.role.index');
         }
 
-        dd('super admin');
-
         $request->validate([
             'role' => ['required', 'string', 'max:255', 'unique:roles,name,' . $role->id],
             'permissions' => ['required', 'array'],
