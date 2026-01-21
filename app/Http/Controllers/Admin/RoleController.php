@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
-class RoleController extends Controller implements HasMiddleware
+class RoleController extends Controller 
 {
     /**
      * Define a middleware for the controller.
@@ -90,6 +90,8 @@ class RoleController extends Controller implements HasMiddleware
             AlertService::error('You can not update Super Admin role.');
             return to_route('admin.role.index');
         }
+
+        dd('super admin');
 
         $request->validate([
             'role' => ['required', 'string', 'max:255', 'unique:roles,name,' . $role->id],

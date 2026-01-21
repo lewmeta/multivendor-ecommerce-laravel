@@ -7,11 +7,20 @@ use App\Models\Admin;
 use App\Services\AlertService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
 
-class UserRoleController extends Controller
+class UserRoleController extends Controller implements HasMiddleware
 {
+    static function Middleware(): array
+    {
+        return [
+            new Middleware('permission:Role Management')
+        ];
+    }
+
     /**
      * Display a listing of the resource.
      */
