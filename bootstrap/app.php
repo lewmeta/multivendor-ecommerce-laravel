@@ -20,6 +20,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'kyc_verified' => App\Http\Middleware\CheckKYCStatus::class,
             'kyc_verified' => App\Http\Middleware\CheckKYCStatus::class,
             'user_role' => App\Http\Middleware\Role::class,
+            'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+            'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+            'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
