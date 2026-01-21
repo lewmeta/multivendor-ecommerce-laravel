@@ -6,13 +6,25 @@ use App\Http\Controllers\Controller;
 use App\Services\AlertService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
-class RoleController extends Controller
+class RoleController extends Controller 
 {
+    /**
+     * Define a middleware for the controller.
+     */
+    public static function Middleware(): array
+    {
+        return [
+            new Middleware('permission:role:Role Management'),
+        ];
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -78,6 +90,8 @@ class RoleController extends Controller
             AlertService::error('You can not update Super Admin role.');
             return to_route('admin.role.index');
         }
+
+        dd('super admin');
 
         $request->validate([
             'role' => ['required', 'string', 'max:255', 'unique:roles,name,' . $role->id],
