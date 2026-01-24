@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -17,8 +18,22 @@ class CategoryController extends Controller
         return view('admin.category.index');
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
-        dd(['Request success' => $request->all()]);
+        // Validation and storage logic goes here
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'slug' => ['required', 'string', 'max:255', 'unique:categories,slug'],
+            'parent_id' => ['nullable', 'exists:categories,id'], // Categoies can be nested based on parent_id
+            'is_active' => ['boolean'],
+            'is_featured' => ['boolean'],
+        ]);
+
+        $data['position'] = Category::where('parent_id', $data['parent_id'] ?? null)->max('position') + 1; // Set position for ordering.
+
+        // Create the category (basic)
+        $category = Category::create($data);
+
+        return response()->json(['success' => true, 'message' => 'Category created successfully', 'category' => $category]);
     }
 }
