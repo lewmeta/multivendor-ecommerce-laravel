@@ -259,7 +259,7 @@
                               </div>
                           </li>
                       @endif
-                      {{-- @if (hasPermission(['Category Management', 'Tags Management', 'Brand Management']))
+                      {{-- @if (hasPermission(['Category Management', 'Tags Management', 'Brand Management'])) --}}
                           <li
                               class="nav-item dropdown {{ setActive(['admin.products.*', 'admin.categories.*', 'admin.brands.*', 'admin.tags.*', 'admin.reviews.*']) }}">
                               <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
@@ -272,14 +272,14 @@
                               <div
                                   class="dropdown-menu {{ setActive(['admin.products.*', 'admin.categories.*', 'admin.brands.*', 'admin.tags.*', 'admin.reviews.*'], 'show') }}">
                                   <div class="dropdown-menu-columns">
-                                      @if (hasPermission(['Category Management']))
+                                      {{-- @if (hasPermission(['Category Management']))
                                           <div class="dropdown-menu-column">
                                               <a class="dropdown-item {{ setActive(['admin.products.*']) }}"
                                                   href="{{ route('admin.products.index') }}">
                                                   Products
                                               </a>
                                           </div>
-                                      @endif
+                                      @endif --}}
 
 
                                       @if (hasPermission(['Category Management']))
@@ -291,40 +291,37 @@
                                           </div>
                                       @endif
 
-                                      @if (hasPermission(['Tags Management']))
+                                      {{-- @if (hasPermission(['Tags Management']))
                                           <div class="dropdown-menu-column">
                                               <a class="dropdown-item {{ setActive(['admin.tags.*']) }}"
                                                   href="{{ route('admin.tags.index') }}">
                                                   Products Tags
                                               </a>
                                           </div>
-                                      @endif
+                                      @endif --}}
 
-                                      @if (hasPermission(['Brand Management']))
+                                      {{-- @if (hasPermission(['Brand Management']))
                                           <div class="dropdown-menu-column">
                                               <a class="dropdown-item {{ setActive(['admin.brands.*']) }}"
                                                   href="{{ route('admin.brands.index') }}">
                                                   Brands
                                               </a>
                                           </div>
-                                      @endif
+                                      @endif --}}
 
-
-
-
-                                      @if (hasPermission(['Brand Management']))
+                                      {{-- @if (hasPermission(['Brand Management']))
                                           <div class="dropdown-menu-column">
                                               <a class="dropdown-item {{ setActive(['admin.reviews.*']) }}"
                                                   href="{{ route('admin.reviews.index') }}">
                                                   Reviews
                                               </a>
                                           </div>
-                                      @endif
+                                      @endif --}}
 
                                   </div>
                               </div>
                           </li>
-                      @endif --}}
+                      {{-- @endif --}}
 
                       {{-- @if (hasPermission(['Order Management']))
                           <li class="nav-item dropdown {{ setActive(['admin.orders.*']) }}">
