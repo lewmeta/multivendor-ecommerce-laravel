@@ -94,3 +94,35 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        $(function() {
+            $('#category-form').submit(function(e) {
+                e.preventDefault();
+                let method = 'POST';
+                let url = "{{ route('admin.categories.store') }}";
+                let data = {
+                    name: $('#name').val(),
+                    slug: $('#slug').val(),
+                    parent_id: $('#parent_id').val(),
+                    is_featured: $('#is_featured').is(':checked') ? 1 : 0,
+                    is_active: $('#is_active').is(':checked') ? 1 : 0,
+                    _token: '{{ csrf_token() }}'
+                }
+
+                $.ajax({
+                    url: url,
+                    method: method,
+                    data: data,
+                    success: function(response) {
+                        console.log(response);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                    }
+                })
+            })
+        })
+    </script>
+@endpush
