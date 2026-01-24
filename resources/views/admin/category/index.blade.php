@@ -97,7 +97,6 @@
 
 @push('scripts')
     <script>
-
         $(function() {
 
             $('#category-form').submit(function(e) {
@@ -105,7 +104,7 @@
                 let id = $('#category-id').val();
                 let method = id ? 'PUT' : 'POST';
                 let url = "{{ route('admin.categories.store') }}";
-                 let formData = new FormData();
+                let formData = new FormData();
                 formData.append('name', $('#name').val());
                 formData.append('slug', $('#slug').val());
                 formData.append('parent_id', $('#parent_id').val());
@@ -126,6 +125,10 @@
                     },
                     error: function(xhr, status, error) {
                         console.log(xhr);
+                        let errors = xhr.responseJSON.errors;
+                        $.each(errors, function(key, value) {
+                            notyf.error(errors[key][0]);
+                        })
                     }
                 })
             });
