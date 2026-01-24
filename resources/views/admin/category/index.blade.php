@@ -117,11 +117,24 @@
                     data: data,
                     success: function(response) {
                         console.log(response);
+                        // reset form
+                        clearForm();
+                        notyf.success(response.message);
                     },
                     error: function(xhr, status, error) {
                         console.error(error);
+                        notyf.error('Something went wrong');
                     }
                 })
+
+                // clear form
+                function clearForm() {
+                    $('#name').val('');
+                    $('#slug').val('');
+                    $('#parent_id').val('');
+                    $('#is_featured').prop('checked', false);
+                    $('#is_active').prop('checked', true);
+                }
             })
         })
     </script>
