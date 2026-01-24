@@ -88,4 +88,5 @@ Route::middleware('auth:admin')->prefix('admin')->as('admin.')->group(function (
 
     /** Category Management Routes */
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+    Route::post('/categories/create', [CategoryController::class, 'store'])->name('categories.store');
 });
