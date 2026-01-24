@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\Auth\VerifyEmailController;
 use App\Http\Controllers\Admin\KycRequestController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UserRoleController;
 use Illuminate\Support\Facades\Route;
 
@@ -77,4 +78,10 @@ Route::middleware('auth:admin')->prefix('admin')->as('admin.')->group(function (
     /** Role Management Routes */
     Route::resource('/role', RoleController::class);
     Route::resource('/role-users', UserRoleController::class);
+
+    /**
+     * Settings routes
+     */
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::put('/settings/general-settings', [SettingController::class, 'generalSettings'])->name('settings.general');
 });
