@@ -656,19 +656,16 @@
                       @endif --}}
 
 
-                      {{-- @if (hasPermission(['Settings Management'])) --}}
+                      @if (hasPermission(['Settings Management']))
                           <li class="nav-item">
                               <a class="nav-link"
-                                  href="#">
+                                  href="{{ route('admin.settings.index') }}">
                                   <span class="nav-link-icon d-md-none d-lg-inline-block"><i
                                           class="ti ti-settings"></i></span>
                                   <span class="nav-link-title"> Settings </span>
                               </a>
                           </li>
-                      {{-- @endif --}}
-
-
-
+                      @endif
 
                   </ul>
                   <!-- END NAVBAR MENU -->
@@ -859,8 +856,8 @@
                           </span>
                           <div class="d-none d-xl-block ps-2">
                               <div>{{ auth('admin')->user()->name }}</div>
-                              {{-- <div class="small text-secondary mt-1">
-                                  {{ auth('admin')->user()?->getRoleNames()?->first() }}</div> --}}
+                              <div class="small text-secondary mt-1">
+                                  {{ auth('admin')->user()?->getRoleNames()?->first() }}</div>
                           </div>
                       </a>
                       <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
