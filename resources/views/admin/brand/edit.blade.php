@@ -10,13 +10,15 @@
                 </div>
             </div>
             <div class="card-body">
-                <form action="{{ route('admin.brands.update', $brand) }}" method="POST" enctype="multipart/form-data" class="brand-form">
+                <form action="{{ route('admin.brands.update', $brand) }}" 
+                method="POST" enctype="multipart/form-data" id="brand-form">
                     @csrf
                     @method('PUT')
+
                     <div class="row">
                         <div class="col-md-3">
                             <div class="mb-3">
-                                <label for="" class="mb-2 form-label">Brand Logo</label>
+                                <label for="" class="form-label mb-2">Brand Logo</label>
                                 <x-input-image imageUploadId="image-upload" imagePreviewId="image-preview"
                                     imageLabelId="image-label" name="brand_logo" :image="asset($brand->image)" />
                                 <x-input-error :messages="$errors->get('brand_logo')" class="mt-2" />
@@ -44,7 +46,7 @@
                 </form>
             </div>
             <div class="card-footer text-end">
-                <button class="btn btn-primary mt-3" onclick="$('brand-form').submit()">Update</button>
+                <button type="submit" class="btn btn-primary mt-3" onclick="$('#brand-form').submit()">Update</button>
             </div>
         </div>
     </div>

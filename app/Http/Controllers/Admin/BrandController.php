@@ -88,9 +88,25 @@ class BrandController extends Controller implements HasMiddleware
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Brand $brand): RedirectResponse
     {
-        //
+        $request->validate([
+            'brand_logo' => ['nullable', 'image', 'max: 2048'],
+            'name' => ['required', 'string', 'max:255'],
+        ]);
+
+        $brand->name = $request->name;
+        if ($request->hasFile('brand_logo')) {
+            $logoPath = $this->uploadFile($request->file('brand_logo'), $brand->image);
+            $brand->image = $logoPath;
+        }
+        $brand->slug = Str::slug($request->name);
+        $brand->is_active = $request->has('status') ? 1 : 0;
+        $brand->save();
+
+        AlertService::created();
+
+        return to_route('admin.brands.index');
     }
 
     /**
