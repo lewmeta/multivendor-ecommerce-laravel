@@ -7,13 +7,21 @@ use App\Models\Category;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
-class CategoryController extends Controller
+class CategoryController extends Controller implements HasMiddleware
 {
+    static function Middleware(): array
+    {
+        return [
+            new Middleware('permission:Category Management')
+        ];
+    }
     /**
      * Display a listing of the categories.
      */
