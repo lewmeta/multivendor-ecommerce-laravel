@@ -291,14 +291,14 @@
                                           </div>
                                       @endif
 
-                                      {{-- @if (hasPermission(['Tags Management']))
+                                      @if (hasPermission(['Tags Management']))
                                           <div class="dropdown-menu-column">
                                               <a class="dropdown-item {{ setActive(['admin.tags.*']) }}"
                                                   href="{{ route('admin.tags.index') }}">
                                                   Products Tags
                                               </a>
                                           </div>
-                                      @endif --}}
+                                      @endif
 
                                       {{-- @if (hasPermission(['Brand Management']))
                                           <div class="dropdown-menu-column">

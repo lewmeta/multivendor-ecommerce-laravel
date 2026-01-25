@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\KycRequestController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\UserRoleController;
 use Illuminate\Support\Facades\Route;
 
@@ -80,9 +81,7 @@ Route::middleware('auth:admin')->prefix('admin')->as('admin.')->group(function (
     Route::resource('/role', RoleController::class);
     Route::resource('/role-users', UserRoleController::class);
 
-    /**
-     * Settings routes
-     */
+    /** Settings routes*/
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::put('/settings/general-settings', [SettingController::class, 'generalSettings'])->name('settings.general');
 
@@ -94,4 +93,8 @@ Route::middleware('auth:admin')->prefix('admin')->as('admin.')->group(function (
     Route::get('/categories/{id}', [CategoryController::class, 'show'])->name('categories.show');
     Route::put('/categories/{id}', [CategoryController::class, 'update'])->name('categories.update');
     Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+
+    /** Resource: Tag Management Routes*/
+    Route::resource('/tags', TagController::class);
+
 });
