@@ -226,7 +226,7 @@
                         }
                     },
                     error: function(xhr, status, error) {
-                        
+
                     }
                 })
             }
@@ -235,7 +235,8 @@
                 e.preventDefault();
                 let id = $('#category-id').val();
                 let method = id ? 'PUT' : 'POST';
-                let url = "{{ route('admin.categories.store') }}";
+                let url = id ? "{{ route('admin.categories.update', ':id') }}".replace(':id', id) :
+                    "{{ route('admin.categories.store') }}";
                 let formData = new FormData();
                 formData.append('name', $('#name').val());
                 formData.append('slug', $('#slug').val());
@@ -243,6 +244,10 @@
                 formData.append('is_active', $('#is_active').is(':checked') ? 1 : 0);
                 formData.append('_token', '{{ csrf_token() }}');
                 formData.append('is_featured', $('#is_featured').is(':checked') ? 1 : 0);
+
+                 if(id) {
+                    formData.append('_method', 'PUT');
+                }
 
                 $.ajax({
                     url: url,
@@ -253,6 +258,7 @@
                     success: function(response) {
                         console.log(response);
                         loadTree();
+                        if(response.type != 'update') clearForm();
                         notyf.success(response.message);
 
                     },
@@ -290,18 +296,11 @@
             }
 
             // Click on category to load it for update
-            $(document).off('click', '.cat-label').on('click', '.cat-label', function (e) {
+            $(document).off('click', '.cat-label').on('click', '.cat-label', function(e) {
                 e.stopPropagation(); // stop event bubbling
                 let id = $(this).data('id');
-                $.get("{{ route('admin.categories.show', ':id') }}" . replace(':id', id), function (cat) {
-                    // $('#category-id').val(cat.category.id);
-                    // $('#category-title').text('Edit Category');
-                    // $('#name').val(cat.category.name);
-                    // $('#slug').val(cat.category.slug);
-                    // $('#parent_id').val(cat.category.parent_id);
-                    // $('#is_active').prop('checked', cat.category.is_active);
-                    // $('#is_featured').prop('checked', cat.category.is_featured);
-                    fillForm(cat.category); 
+                $.get("{{ route('admin.categories.show', ':id') }}".replace(':id', id), function(cat) {
+                    fillForm(cat.category);
                 })
 
             })

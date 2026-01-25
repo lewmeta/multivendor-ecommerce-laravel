@@ -92,7 +92,7 @@ class CategoryController extends Controller
      */
     public function updateTree($nodes, $parentId)
     {
-        foreach ($nodes as $position => $node){
+        foreach ($nodes as $position => $node) {
             $category = Category::find($node['id']);
             $category->update([
                 'parent_id' => $parentId,
@@ -112,6 +112,48 @@ class CategoryController extends Controller
     {
         $category = Category::findOrFail($id);
         return response()->json(['success' => true, 'category' => $category]);
+    }
+
+    /**
+     * Update the specified category in storage.
+     */
+    public function update(Request $request, int $id): JsonResponse
+    {
+        $category = Category::findOrFail($id);
+        // Validate data
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'slug' => ['required', 'string', 'max:255', 'unique:categories,slug,' . $category->id], // Ensures slug is unique except for current category
+            'parent_id' => ['nullable', 'exists:categories,id'],
+            'is_active' => ['boolean'],
+            'is_featured' => ['boolean'],
+        ]);
+
+        // prevent circular reference and max depth
+        if ($data['parent_id'] ?? null) {
+            $parent = Category::find($data['parent_id']);
+            $depth = 1;
+
+            while ($parent && $parent->parent_id) {
+                $depth++;
+                $parent = $parent->parent;
+                if ($depth >= 3) break;
+            }
+
+            if ($depth >= 3) {
+                throw ValidationException::withMessages([
+                    'parent_id' => 'Maximum depth reached'
+                ]);
+            }
+        }
+
+        $data['is_active'] = $data['is_active'] ?? false;
+        $data['is_featured'] = $data['is_featured'] ?? false;
+
+        // Update the category
+        $category->update($data);
+
+        return response()->json(['success' => true, 'message' => 'Category updated successfully', 'category' => $category, 'type' => 'update']);
     }
 
     /**
