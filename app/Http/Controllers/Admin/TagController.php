@@ -60,9 +60,13 @@ class TagController extends Controller
 
     /**
      * Show the form for editing the specified resource.
+     * 
+     * @param Tag $tag Model binding for the tag to edit
+     * @return View
      */
-    public function edit(string $id)
+    public function edit(Tag $tag): View
     {
+        return view('admin.tag.edit', compact('tag'));
     }
 
     /**
