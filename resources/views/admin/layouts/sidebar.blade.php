@@ -300,14 +300,14 @@
                                           </div>
                                       @endif
 
-                                      {{-- @if (hasPermission(['Brand Management']))
+                                      @if (hasPermission(['Brand Management']))
                                           <div class="dropdown-menu-column">
                                               <a class="dropdown-item {{ setActive(['admin.brands.*']) }}"
                                                   href="{{ route('admin.brands.index') }}">
                                                   Brands
                                               </a>
                                           </div>
-                                      @endif --}}
+                                      @endif
 
                                       {{-- @if (hasPermission(['Brand Management']))
                                           <div class="dropdown-menu-column">
