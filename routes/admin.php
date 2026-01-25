@@ -9,8 +9,12 @@ use App\Http\Controllers\Admin\Auth\PasswordController;
 use App\Http\Controllers\Admin\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Admin\Auth\RegisteredUserController;
 use App\Http\Controllers\Admin\Auth\VerifyEmailController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\KycRequestController;
 use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\UserRoleController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest:admin')->prefix('admin')->as('admin.')->group(function () {
@@ -71,4 +75,23 @@ Route::middleware('auth:admin')->prefix('admin')->as('admin.')->group(function (
     Route::get('/kyc-requests/{kyc_request}', [KycRequestController::class, 'show'])->name('kyc.show');
     Route::get('/kyc-requests/download', [KycRequestController::class, 'download'])->name('kyc.download');
     Route::put('/kyc-requests/{kyc_request}/update', [KycRequestController::class, 'update'])->name('kyc.update');
+
+    /** Role Management Routes */
+    Route::resource('/role', RoleController::class);
+    Route::resource('/role-users', UserRoleController::class);
+
+    /**
+     * Settings routes
+     */
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::put('/settings/general-settings', [SettingController::class, 'generalSettings'])->name('settings.general');
+
+    /** Category Management Routes */
+    Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+    Route::post('/categories/create', [CategoryController::class, 'store'])->name('categories.store');
+    Route::get('/categories/nested', [CategoryController::class, 'getNestedCategories'])->name('categories.nested');
+    Route::post('/categories/update-order', [CategoryController::class, 'updateOrder'])->name('categories.update-order');
+    Route::get('/categories/{id}', [CategoryController::class, 'show'])->name('categories.show');
+    Route::put('/categories/{id}', [CategoryController::class, 'update'])->name('categories.update');
+    Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 });
