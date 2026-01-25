@@ -112,8 +112,12 @@ class BrandController extends Controller implements HasMiddleware
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Brand $brand)
     {
-        //
+        $this->deleteFile($brand->image);
+
+        $brand->delete();
+        AlertService::deleted();
+        return response()->json(['status' => 'success', 'message' => 'Brand deleted successfully']);
     }
 }
