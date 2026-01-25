@@ -62,7 +62,7 @@ class BrandController extends Controller implements HasMiddleware
         $brand->name = $request->name;
         $brand->slug = Str::slug($request->name);
         $brand->image = $logoPath;
-        $brand->is_active = $request->has('is_active') ? 1 : 0;
+        $brand->is_active = $request->has('status') ? 1 : 0;
         $brand->save();
 
         AlertService::created();
