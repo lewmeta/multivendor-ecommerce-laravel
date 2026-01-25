@@ -106,6 +106,15 @@ class CategoryController extends Controller
     }
 
     /**
+     * Display the specified category.
+     */
+    public function show($id): JsonResponse
+    {
+        $category = Category::findOrFail($id);
+        return response()->json(['success' => true, 'category' => $category]);
+    }
+
+    /**
      * Get nested categories for tree view.
      */
     public function getNestedCategories()

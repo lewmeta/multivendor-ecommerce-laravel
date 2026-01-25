@@ -289,6 +289,22 @@
                 })
             }
 
+            // Click on category to load it for update
+            $(document).off('click', '.cat-label').on('click', '.cat-label', function (e) {
+                e.stopPropagation(); // stop event bubbling
+                let id = $(this).data('id');
+                $.get("{{ route('admin.categories.show', ':id') }}" . replace(':id', id), function (cat) {
+                    $('#category-id').val(cat.category.id);
+                    $('#category-title').text('Edit Category');
+                    $('#name').val(cat.category.name);
+                    $('#slug').val(cat.category.slug);
+                    $('#parent_id').val(cat.category.parent_id);
+                    $('#is_active').prop('checked', cat.category.is_active);
+                    $('#is_featured').prop('checked', cat.category.is_featured);
+                })
+                console.log('clicked');
+            })
+
             // slug auto-generate
 
             // clear form
