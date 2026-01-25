@@ -162,9 +162,29 @@
 
 @push('scripts')
     <script>
+        // $(document).ready(function() {
+        //     $.uploadPreview({
+        //         input_field: "#image-upload", // Default: .image-upload
+        //         preview_box: "#image-preview", // Default: .image-preview
+        //         label_field: "#image-label", // Default: .image-label
+        //         label_default: "Choose File", // Default: Choose File
+        //         label_selected: "Change File", // Default: Change File
+        //         no_label: false // Default: false
+        //     });
+
+        //     $.uploadPreview({
+        //         input_field: "#image-upload-two", // Default: .image-upload
+        //         preview_box: "#image-preview-two", // Default: .image-preview
+        //         label_field: "#image-label-two", // Default: .image-label
+        //         label_default: "Choose File", // Default: Choose File
+        //         label_selected: "Change File", // Default: Change File
+        //         no_label: false // Default: false
+        //     });
+        // });
+
+
         $(function() {
 
-            // Load category tree
             function loadTree() {
                 $('#tree-loading').removeClass('d-none');
                 $.get("{{ route('admin.categories.nested') }}", function(data) {
@@ -183,7 +203,6 @@
                 })
             }
 
-            // Render tree recursively
             function renderTree(categories) {
                 if (!categories.length) return;
                 let html = '<ol class="dd-list" style="margin-bottom: 0">';
@@ -211,7 +230,6 @@
                 return html;
             }
 
-            // Update order
             function updateOrder() {
                 let tree = $('#nestable-tree').nestable('serialize');
                 $.post({
@@ -222,7 +240,7 @@
                     },
                     success: function(response) {
                         if (response.success) {
-                            notyf.success(response.message)
+                            notyf.success(response.message);
                         }
                     },
                     error: function(xhr, status, error) {
@@ -231,12 +249,14 @@
                 })
             }
 
+
             $('#category-form').submit(function(e) {
                 e.preventDefault();
                 let id = $('#category-id').val();
                 let method = id ? 'PUT' : 'POST';
                 let url = id ? "{{ route('admin.categories.update', ':id') }}".replace(':id', id) :
                     "{{ route('admin.categories.store') }}";
+
                 let formData = new FormData();
                 formData.append('name', $('#name').val());
                 formData.append('slug', $('#slug').val());
@@ -245,7 +265,17 @@
                 formData.append('_token', '{{ csrf_token() }}');
                 formData.append('is_featured', $('#is_featured').is(':checked') ? 1 : 0);
 
-                 if(id) {
+                let iconFile = $('#image-upload')[0].files[0];
+                if (iconFile) {
+                    formData.append('icon', iconFile);
+                }
+
+                let imageFile = $('#image-upload-two')[0].files[0];
+                if (imageFile) {
+                    formData.append('image', imageFile);
+                }
+
+                if(id) {
                     formData.append('_method', 'PUT');
                 }
 
@@ -259,6 +289,7 @@
                         console.log(response);
                         loadTree();
                         if(response.type != 'update') clearForm();
+
                         notyf.success(response.message);
 
                     },
@@ -271,6 +302,8 @@
                     }
                 })
             });
+
+
 
             // load parent dropdown
             function loadParentDropdown(selectedId, excludeId) {
@@ -295,27 +328,84 @@
                 })
             }
 
-            // Click on category to load it for update
+
+            // Delete category
+            $('#btn-delete').on('click', function() {
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "You won't be able to revert this!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, delete it!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        let id = $('#category-id').val();
+                        $.ajax({
+                            url: "{{ route('admin.categories.destroy', ':id') }}".replace(
+                                ':id', id),
+                            method: 'POST',
+                            data: {
+                                _token: '{{ csrf_token() }}',
+                                _method: 'DELETE'
+                            },
+                            success: function(response) {
+                                if (response.success) {
+                                    clearForm();
+                                    loadTree();
+                                    notyf.success(response.message);
+                                }
+                            },
+                            error: function(xhr, status, error) {
+
+                                if (xhr.responseJSON.error) {
+                                    notyf.error(xhr.responseJSON.message);
+                                }
+                            }
+                        })
+                    }
+                });
+            })
+
             $(document).off('click', '.cat-label').on('click', '.cat-label', function(e) {
-                e.stopPropagation(); // stop event bubbling
+                e.stopPropagation();
+                clearForm();
                 let id = $(this).data('id');
                 $.get("{{ route('admin.categories.show', ':id') }}".replace(':id', id), function(cat) {
                     fillForm(cat.category);
-                })
-
+                });
             })
 
             // slug auto-generate
+            $('#name').on('input', function() {
+                if (!$('#category-id').val()) {
+                    $('#slug').val(slugify($(this).val()));
+                }
+            })
 
-            // Fill form to edit category
+
+            function slugify(text) {
+                return text.toString().toLowerCase().replace(/\s+/g, '-')
+                    .replace(/[^a-z0-9\-]/g, '')
+                    .replace(/\-+/g, '-')
+                    .replace(/^\-+|\-+$/g, '');
+            }
+
+
+
             function fillForm(cat) {
-                $('#category-id').val(cat.id);
+                let domain = "{{ url('/') }}";
                 $('#category-title').text('Edit Category');
                 $('#name').val(cat.name);
                 $('#slug').val(cat.slug);
-                $('#parent_id').val(cat.parent_id);
                 $('#is_active').prop('checked', cat.is_active);
+                loadParentDropdown(cat.parent_id, cat.id);
+                $('#category-id').val(cat.id);
+                $('#btn-delete').removeClass('d-none');
                 $('#is_featured').prop('checked', cat.is_featured);
+                $('#image-preview').css('background-image', cat.icon ? `url(${domain}/${cat.icon})` : '');
+                $('#image-preview-two').css('background-image', cat.image ? `url(${domain}/${cat.image})` : '');
             }
 
             // clear form
@@ -328,7 +418,18 @@
                 $('#is_active').prop('checked', true);
                 loadParentDropdown(null, null);
                 $('#category-id').val('');
+                $('#btn-delete').addClass('d-none');
+                $('#is_featured').prop('checked', false);
+                $('.image-preview').css('background-image', 'none');
             }
+
+            $('#btn-new').on('click', function() {
+                clearForm();
+            })
+
+            $('#btn-cancel').on('click', function() {
+                clearForm();
+            })
 
             // Initial Load
             clearForm();

@@ -157,6 +157,20 @@ class CategoryController extends Controller
     }
 
     /**
+     * Remove the specified category from storage.
+     */
+    function destroy(int $id)
+    {
+        $category = Category::findOrFail($id);
+        if ($category->children()->count() > 0) {
+            return response()->json(['error' => true, 'message' => 'Category has children and cannot be deleted'], 422);
+        }
+
+        $category->delete();
+        return response()->json(['success' => true, 'message' => 'Category deleted successfully']);
+    }
+
+    /**
      * Get nested categories for tree view.
      */
     public function getNestedCategories()
