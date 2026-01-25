@@ -294,18 +294,30 @@
                 e.stopPropagation(); // stop event bubbling
                 let id = $(this).data('id');
                 $.get("{{ route('admin.categories.show', ':id') }}" . replace(':id', id), function (cat) {
-                    $('#category-id').val(cat.category.id);
-                    $('#category-title').text('Edit Category');
-                    $('#name').val(cat.category.name);
-                    $('#slug').val(cat.category.slug);
-                    $('#parent_id').val(cat.category.parent_id);
-                    $('#is_active').prop('checked', cat.category.is_active);
-                    $('#is_featured').prop('checked', cat.category.is_featured);
+                    // $('#category-id').val(cat.category.id);
+                    // $('#category-title').text('Edit Category');
+                    // $('#name').val(cat.category.name);
+                    // $('#slug').val(cat.category.slug);
+                    // $('#parent_id').val(cat.category.parent_id);
+                    // $('#is_active').prop('checked', cat.category.is_active);
+                    // $('#is_featured').prop('checked', cat.category.is_featured);
+                    fillForm(cat.category); 
                 })
-                console.log('clicked');
+
             })
 
             // slug auto-generate
+
+            // Fill form to edit category
+            function fillForm(cat) {
+                $('#category-id').val(cat.id);
+                $('#category-title').text('Edit Category');
+                $('#name').val(cat.name);
+                $('#slug').val(cat.slug);
+                $('#parent_id').val(cat.parent_id);
+                $('#is_active').prop('checked', cat.is_active);
+                $('#is_featured').prop('checked', cat.is_featured);
+            }
 
             // clear form
             function clearForm() {
