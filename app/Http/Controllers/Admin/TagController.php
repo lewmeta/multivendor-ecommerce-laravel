@@ -71,10 +71,26 @@ class TagController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * 
+     * @param Request $request
+     * @param Tag $tag Model binding for the tag to update
+     * @return RedirectResponse
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Tag $tag): RedirectResponse
     {
-        //
+        // Validate and update the tag
+        $request->validate([
+            'name' => ['required', 'string', 'max:255', 'unique:tags,name,' . $tag->id], // Skip unique check for current tag
+
+        ]);
+
+        $tag->name = $request->name;
+        $tag->slug = Str::slug($request->name);
+        $tag->is_active = $request->has('status') ? 1 : 0;
+        $tag->save();
+
+        AlertService::updated();
+        return to_route('admin.tags.index');
     }
 
     /**
