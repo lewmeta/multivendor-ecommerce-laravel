@@ -90,4 +90,5 @@ Route::middleware('auth:admin')->prefix('admin')->as('admin.')->group(function (
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
     Route::post('/categories/create', [CategoryController::class, 'store'])->name('categories.store');
     Route::get('/categories/nested', [CategoryController::class, 'getNestedCategories'])->name('categories.nested');
+    Route::post('/categories/update-order', [CategoryController::class, 'updateOrder'])->name('categories.update-order');
 });

@@ -7,6 +7,8 @@ use App\Models\Category;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
@@ -62,9 +64,51 @@ class CategoryController extends Controller
     }
 
     /**
+     * Update category order
+     */
+    public function updateOrder(Request $request): JsonResponse
+    {
+        $tree = $request->tree;
+        try {
+            DB::transaction(function () use ($tree) {
+                $this->updateTree($tree, null);
+            });
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Category order updated',
+            ]);
+        } catch (\Throwable $th) {
+            Log::error('Category Order Update Error: ', $th);
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update category order'
+            ], 500);
+        }
+    }
+
+    /**
+     * Update tree recursively
+     */
+    public function updateTree($nodes, $parentId)
+    {
+        foreach ($nodes as $position => $node){
+            $category = Category::find($node['id']);
+            $category->update([
+                'parent_id' => $parentId,
+                'position' => $position,
+            ]);
+
+            if (isset($node['children']) && is_array($node['children'])) {
+                $this->updateTree($node['children'], $category->id);
+            }
+        }
+    }
+
+    /**
      * Get nested categories for tree view.
      */
-    function getNestedCategories()
+    public function getNestedCategories()
     {
         $categories = Category::getNested();
         return response()->json($categories);
