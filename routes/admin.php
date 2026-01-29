@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\Auth\VerifyEmailController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\KycRequestController;
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SettingController;
@@ -101,4 +102,7 @@ Route::middleware('auth:admin')->prefix('admin')->as('admin.')->group(function (
     /** Resource: Brand Management Routes*/
     Route::resource('/brands', BrandController::class);
 
+    /** Products routes */
+    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+    Route::get('/products/{type}/create', [ProductController::class, 'create'])->name('products.create');
 });

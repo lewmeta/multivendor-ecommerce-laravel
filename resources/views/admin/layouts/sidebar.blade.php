@@ -272,14 +272,14 @@
                               <div
                                   class="dropdown-menu {{ setActive(['admin.products.*', 'admin.categories.*', 'admin.brands.*', 'admin.tags.*', 'admin.reviews.*'], 'show') }}">
                                   <div class="dropdown-menu-columns">
-                                      {{-- @if (hasPermission(['Category Management']))
+                                      @if (hasPermission(['Category Management']))
                                           <div class="dropdown-menu-column">
                                               <a class="dropdown-item {{ setActive(['admin.products.*']) }}"
                                                   href="{{ route('admin.products.index') }}">
                                                   Products
                                               </a>
                                           </div>
-                                      @endif --}}
+                                      @endif
 
 
                                       @if (hasPermission(['Category Management']))
