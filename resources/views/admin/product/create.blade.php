@@ -209,7 +209,7 @@
 
                                     </div>
 
-                                    <ul class="list-unstyled " id="category-tree">
+                                    <ul class="list-unstyled" id="category-tree">
                                         @foreach ($categories as $category)
                                             <li>
                                                 <label for="" class="form-check category-wrapper">
@@ -327,7 +327,7 @@
 
                         <div class="card-body">
                             <div class="col-md-12">
-                                <div class="mb-3 row">
+                                <div class="row mb-3">
                                     <button class="btn btn-primary mt-3" type="submit">Create</button>
                                 </div>
                             </div>
@@ -339,3 +339,118 @@
     </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
+    <script>
+        $(document).on('change', '.category-check', function() {
+            const isChecked = $(this).is(':checked');
+
+            $(this).closest('li').find('input.category-check').each(function() {
+                this.checked = isChecked;
+                this.indeterminate = false;
+            })
+
+            function updateParents($input) {
+                const $li = $input.closest('li').parent().closest('li');
+
+                console.log($li);
+
+                if ($li.length) {
+                    const $siblings = $li.find('> ul > li input.category-check');
+                    const checkedCount = $siblings.filter(':checked').length;
+                    const $parent = $li.find('> label > input.category-check');
+
+                    if (checkedCount === 0) {
+                        $parent.prop('checked', false).prop('indeterminate', false);
+                    } else if (checkedCount === $siblings.length) {
+                        $parent.prop('checked', true).prop('indeterminate', false);
+                    } else {
+                        $parent.prop('checked', false).prop('indeterminate', true);
+                    }
+
+                    updateParents($parent);
+                }
+            }
+
+            updateParents($(this));
+        })
+
+        // search logic
+        $('#category-search').on('input', function() {
+            const query = $(this).val().toLowerCase();
+
+            $('#category-tree li').each(function() {
+                const label = $(this).find('> label > .category-label').text().toLowerCase();
+                if (label.includes(query)) {
+                    $(this).removeClass('d-none');
+                    // show all ancestors
+                    $(this).parents('li').removeClass('d-none');
+                } else {
+                    $(this).addClass('d-none');
+                }
+            });
+
+            // if query is empty, show all
+            if (query === '') {
+                $('#category-tree li').removeClass('d-none');
+            }
+        });
+
+        $('.manage-stock-check').on('change', function() {
+            if ($(this).is(':checked')) {
+                $('.manage-stock').removeClass('d-none');
+            } else {
+                $('.manage-stock').addClass('d-none');
+            }
+        })
+
+
+        // submit form
+        $(function() {
+            $('.product-form').on('submit', function(e) {
+                e.preventDefault();
+                let form = $(this);
+                let data = new FormData(form[0]);
+
+                $.ajax({
+                    method: 'POST',
+                    url: "{{ route('admin.products.store', ['type' => ':type']) }}".replace(
+                        ':type', '{{ request()->type }}'),
+                    data: data,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        if (response.status == 'success') {
+                            window.location.href = response.redirect_url;
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.log(xhr);
+                        let errors = xhr.responseJSON.errors;
+                        $.each(errors, function(key, value) {
+                            notyf.error(errors[key][0]);
+                        });
+                    }
+                })
+            });
+        })
+
+        // slug auto-generate
+        $('#name').on('input', function() {
+            if (!$('#category-id').val()) {
+                $('#slug').val(slugify($(this).val()));
+            }
+        })
+
+
+        function slugify(text) {
+            return text.toString().toLowerCase().replace(/\s+/g, '-')
+                .replace(/[^a-z0-9\-]/g, '')
+                .replace(/\-+/g, '-')
+                .replace(/^\-+|\-+$/g, '');
+        }
+    </script>
+@endpush
