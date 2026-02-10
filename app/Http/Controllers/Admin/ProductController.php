@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\Store;
 use App\Models\Tag;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 
 class ProductController extends Controller
 {
@@ -40,6 +41,14 @@ class ProductController extends Controller
             'tags',
             'categories',
         ));
+    }
+
+    /**
+     * Create a product
+     */
+    public function store(): JsonResponse
+    {
+        dd('This route is working!');
     }
 
 }
