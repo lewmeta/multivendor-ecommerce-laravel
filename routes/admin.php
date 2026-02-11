@@ -104,7 +104,7 @@ Route::middleware('auth:admin')->prefix('admin')->as('admin.')->group(function (
 
     /** Products routes */
     Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-    Route::get('/products/{type}/create', [ProductController::class, 'create'])->name('products.create');
-    Route::post('/products/{type}/create', [ProductController::class, 'create'])->name('product.store');
 
+    Route::get('/products/{type}/create', [ProductController::class, 'create'])->name('products.create');
+    Route::post('/products/{type}/create', [ProductController::class, 'store'])->name('products.store');
 });
