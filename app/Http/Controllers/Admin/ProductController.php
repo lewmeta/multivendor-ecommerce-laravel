@@ -47,7 +47,7 @@ class ProductController extends Controller
     /**
      * Create a product
      */
-    public function store(ProductStoreRequest $request, string $type): JsonResponse
+    public function store(ProductStoreRequest $request, string $type)
     {
         if (!in_array($type, ['physical', 'digital'])) abort(404);
 
@@ -72,7 +72,5 @@ class ProductController extends Controller
         $product->is_hot = $request->has('is_hot') ? 1 : 0;
         $product->is_new = $request->has('is_new') ? 1 : 0;
         $product->save();
-
-        
     }
 }
