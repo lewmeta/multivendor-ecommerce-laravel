@@ -1,5 +1,94 @@
 @extends('admin.layouts.app')
 
+@push('styles')
+    <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+
+    <style>
+        /* Add these new styles */
+        .dropzone {
+            border: 2px dashed #ccc;
+            border-radius: 4px;
+            padding: 20px;
+            text-align: center;
+            background: #f8f9fa;
+            margin-bottom: 20px;
+        }
+
+        .dropzone.dz-drag-hover {
+            border-color: #2196F3;
+            background: #e3f2fd;
+        }
+
+        .image-preview-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .image-preview-item {
+            position: relative;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: move;
+        }
+
+        .image-preview-item img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .image-preview-item .remove-image {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: red;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            text-align: center;
+            line-height: 24px;
+            cursor: pointer;
+        }
+
+        .image-preview-loader {
+            position: relative;
+            width: 100%;
+            height: 150px;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 1.5s infinite;
+        }
+
+        .image-preview-loader::after {
+            content: "Uploading...";
+            color: #666;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.6;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.6;
+            }
+        }
+    </style>
+@endpush
+
 @section('contents')
     <div class="container-xl">
         <form action="" class="product-form">
@@ -7,13 +96,18 @@
             <div class="row">
                 <div class="col-md-8">
                     <div class="card mb-3">
+                        {{-- <div class="card-header">
+                        <h3 class="card-title">Create Roles</h3>
+                        <div class="card-actions">
+                            <a href="{{ route('admin.role.index') }}" class="btn btn-primary">Back</a>
+                        </div>
+                    </div> --}}
                         <div class="card-body">
 
                             <div class="col-md-12">
                                 <div class="mb-3">
                                     <label class="form-label required">Name</label>
-                                    <input type="text" class="form-control" name="name" id="name" placeholder=""
-                                        value="">
+                                    <input type="text" class="form-control" name="name" id="name" placeholder="" value="">
                                     <x-input-error :messages="$errors->get('name')" class="mt-2" />
                                 </div>
                             </div>
@@ -21,8 +115,7 @@
                             <div class="col-md-12">
                                 <div class="mb-3">
                                     <label class="form-label required">Slug</label>
-                                    <input type="text" class="form-control" name="slug" id="slug" placeholder=""
-                                        value="">
+                                    <input type="text" class="form-control" name="slug" id="slug" placeholder="" value="">
                                     <x-input-error :messages="$errors->get('slug')" class="mt-2" />
                                 </div>
                             </div>
@@ -343,6 +436,7 @@
 @push('scripts')
     <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
 
     <script>
         $(document).on('change', '.category-check', function() {
