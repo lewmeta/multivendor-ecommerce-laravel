@@ -10,10 +10,10 @@ use App\Models\Product;
 use App\Models\Store;
 use App\Models\Tag;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\JsonResponse;
 
 class ProductController extends Controller
 {
+
     /**
      * Dispaly a list of products
      * 
@@ -49,7 +49,9 @@ class ProductController extends Controller
      */
     public function store(ProductStoreRequest $request, string $type)
     {
+        dd($request->all());
         if (!in_array($type, ['physical', 'digital'])) abort(404);
+
 
         $product = new Product();
         $product->name = $request->name;
@@ -72,5 +74,27 @@ class ProductController extends Controller
         $product->is_hot = $request->has('is_hot') ? 1 : 0;
         $product->is_new = $request->has('is_new') ? 1 : 0;
         $product->save();
+
+        /** Attach categories */
+        $product->categories()->sync($request->categories);
+
+        /** Attach tags */
+        $product->tags()->sync($request->tags);
+
+        if ($type === 'physical') {
+            return response()->json([
+                'id' => $product->id,
+                'redirect_url' => route('admin.products.edit', $product->id) . '#product-images',
+                'status' => 'success',
+                'message' => 'Product created successfully'
+            ]);
+        } else {
+            return response()->json([
+                'id' => $product->id,
+                'redirect_url' => route('admin.digital-products.edit', $product->id) . '#product-images',
+                 'status' => 'success',
+                'message' => 'Product created successfully'
+            ]);
+        }
     }
 }
