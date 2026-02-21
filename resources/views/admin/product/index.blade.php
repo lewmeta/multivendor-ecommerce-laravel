@@ -22,7 +22,7 @@
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
-                    <table class="table table-vcenter card-table">
+                    <table class="table-vcenter card-table table">
                         <thead>
                             <tr>
                                 <th>No.</th>
@@ -57,7 +57,7 @@
                                             @endif
                                         </div>
                                         <small
-                                            class="text-muted text-sm text-capitalize">
+                                            class="text-muted text-capitalize text-sm">
                                             {{ $product->product_type }}
                                         </small>
                                     </td>
@@ -140,7 +140,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                        {{ $product->store->name }}
+                                        {{ $product?->store?->name }}
                                     </td>
                                     <td>
                                         @if ($product->product_type == 'physical')
@@ -150,9 +150,9 @@
                                             <a href="{{ route('admin.digital-products.edit', $product->id) }}"
                                                 class="btn btn-sm btn-primary"><i class="ti ti-edit"></i></a>
                                         @endif
-                                        <a class="delete-item btn btn-sm btn-danger mt-2"
+                                        {{-- <a class="delete-item btn btn-sm btn-danger mt-2"
                                             href="{{ route('admin.products.destroy', $product) }}"><i
-                                                class="ti ti-trash"></i></a>
+                                                class="ti ti-trash"></i></a> --}}
                                     </td>
                                 </tr>
                             @empty

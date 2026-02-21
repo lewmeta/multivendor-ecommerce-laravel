@@ -534,6 +534,379 @@
     <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr"></script>
 
     <script>
+        $(function() {
+
+            const pickerInstances = {};
+
+            let uniqueCounter = 0;
+
+            function generateUniqueId(prefix = 'picker-') {
+                uniqueCounter++;
+                return prefix + uniqueCounter + '-' + Date.now();
+            }
+
+            function createPicker(pickerId, defaultColor, inputSelector) {
+                if (pickerInstances[pickerId]) {
+                    pickerInstances[pickerId].destroyAndRemove();
+                }
+
+                const picker = Pickr.create({
+                    el: `#${pickerId}`,
+                    theme: 'classic',
+                    default: defaultColor,
+                    components: {
+                        preview: true,
+                        opacity: true,
+                        hue: true,
+                        interaction: {
+                            hex: true,
+                            rgba: true,
+                            input: true,
+                            clear: true,
+                            save: true
+                        }
+                    }
+                });
+
+                picker.on('change', (color) => {
+                    const selectedColor = color.toHEXA().toString();
+                    $(`#${pickerId}`).css('background-color', selectedColor);
+                    $(inputSelector).val(selectedColor);
+                })
+
+                pickerInstances[pickerId] = picker;
+            }
+
+            function destroyPicker(pickerId) {
+                if (pickerInstances[pickerId]) {
+                    pickerInstances[pickerId].destroyAndRemove();
+                    delete pickerInstances[pickerId];
+                }
+            }
+
+            function initColorPickersInContainer($container) {
+                $container.find('.color-preview').each(function() {
+                    const $this = $(this);
+                    const pickerId = $this.attr('id');
+                    const currentColor = $this.css('background-color') || '#oooooo';
+                    createPicker(pickerId, currentColor, `input[data-picker-id="${pickerId}"]`);
+                })
+            }
+
+
+            let count = 0;
+            $('#add-attribute-btn').on('click', function() {
+                count++;
+                const collapseId = 'collapse' + count;
+                const headerId = 'header' + count;
+
+                const accordionItem = `
+                <div class="accordion-item" data-index="${count}">
+    <div class="accordion-header" id="${headerId}">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+            data-bs-target="#${collapseId}" aria-controls="${collapseId}" aria-expanded="false">
+            New Attribute #${count}
+            <div class="accordion-button-toggle">
+                <!-- Download SVG icon from http://tabler.io/icons/icon/chevron-down -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="icon icon-1">
+                    <path d="M6 9l6 6l6 -6"></path>
+                </svg>
+            </div>
+        </button>
+        <span class="delete-btn"
+            style="padding: 5px; background: red; color: white; border-radius: 5px; margin-right: 10px;"><i
+                class="ti ti-trash"></i></span>
+    </div>
+    <div id="${collapseId}" class="accordion-collapse collapse" data-bs-parent="#accordion-default" style="">
+        <div class="accordion-body">
+            <form action="" method="POST" >
+                @csrf
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="" class="form-label">Name</label>
+                    <input type="text" class="form-control" value="" name="attribute_name">
+                </div>
+                <div class="col-md-6">
+                    <label for="" class="form-label">Type</label>
+                    <select name="attribute_type" class="form-control main-type" id="">
+                        <option value="text">Text</option>
+                        <option value="color">Color</option>
+                    </select>
+                </div>
+            </div>
+            <table class="table-bordered section-table mt-3 table" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>Label</th>
+                        <th class="value-header">Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <div class="mt-2">
+                <button class="btn btn-sm btn-primary add-row-btn" type="button">Add Row</button>
+                <button class="btn btn-sm btn-success save-btn" type="button">Save</button>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+                `;
+
+                $('#accordion-default').append(accordionItem);
+            })
+
+
+            $(document).on('click', '.add-row-btn', function() {
+                const accordionBody = $(this).closest('.accordion-body');
+                const type = accordionBody.find('.main-type').val();
+                const table = accordionBody.find('.section-table');
+                const tbody = table.find('tbody');
+                table.show();
+
+                const pickerId = generateUniqueId();
+                let rowHtml = '';
+
+
+                if (type === 'color') {
+                    rowHtml = `
+                    <tr>
+                        <td>
+                            <input type="text" name="label[]" id="" class="form-control label-input" class="Label">
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div id="${pickerId}" class="color-preview"> </div>
+                                <input type="hidden" class="color-value" data-picker-id="${pickerId}" name="color_value[]" >
+                                <span class="review-row-btn ms-2"><i class="ti ti-trash"></i></span>
+                            </div>
+
+                        </td>
+                    </tr>
+                    `
+                } else {
+                    rowHtml = `
+                    <tr>
+                        <td colspan="2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <input type="text" class="form-control label-input" name="label[]" placeholder="Label">
+                                <span class="review-row-btn ms-2"><i class="ti ti-trash"></i></span>
+                            </div>
+                        </td>
+                    </tr>
+                    `
+                }
+
+                tbody.append(rowHtml);
+
+                if (type === 'color') {
+                    createPicker(pickerId, '#000000', `input[data-picker-id="${pickerId}"]`);
+                }
+            })
+
+
+            // remove attribute values
+            $(document).on('click', '.review-row-btn', function() {
+                const $row = $(this).closest('tr');
+                const $colorPreview = $row.find('.color-preview');
+                if ($colorPreview.length) {
+                    destroyPicker($colorPreview.attr('id'));
+                }
+                const $table = $(this).closest('.section-table');
+                $row.remove();
+                const tbody = $table.find('tbody');
+                if (tbody.children().length === 0) {
+                    $table.hide();
+                }
+            })
+
+            // change type => rebuild rows and mange picker
+            $(document).on('change', '.main-type', function() {
+                const accordionBody = $(this).closest('.accordion-body');
+                const type = $(this).val();
+                const table = accordionBody.find('.section-table');
+                const tbody = table.find('tbody');
+
+                // collect row values and destroy any existing pickers
+                const labels = [];
+
+                tbody.find('tr').each(function() {
+                    const $colorPreview = $(this).find('.color-preview');
+                    if ($colorPreview.length) {
+                        destroyPicker($colorPreview.attr('id'));
+                    }
+                    const labelVal = $(this).find('.label-input').val();
+                    labels.push(labelVal || '');
+                })
+
+                tbody.empty();
+
+                labels.forEach(label => {
+                    const pickerId = generateUniqueId();
+                    let rowHtml = '';
+
+                    if (type === 'color') {
+                        rowHtml = `
+                    <tr>
+                        <td>
+                            <input type="text" name="label[]" id="" class="form-control label-input" class="Label" value="${label}">
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div id="${pickerId}" class="color-preview"> </div>
+                                <input type="hidden" class="color-value" data-picker-id="${pickerId}" name="color_value[]">
+                                <span class="review-row-btn ms-2"><i class="ti ti-trash"></i></span>
+                            </div>
+
+                        </td>
+                    </tr>
+                    `
+                    } else {
+                        rowHtml = `
+                    <tr>
+                        <td colspan="2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <input type="text" class="form-control label-input" name="label[]" placeholder="Label" value="${label}">
+                                <span class="review-row-btn ms-2"><i class="ti ti-trash"></i></span>
+                            </div>
+                        </td>
+                    </tr>
+                    `
+                    }
+
+                    tbody.append(rowHtml);
+
+                    if (type === 'color') {
+                        createPicker(pickerId, '#000000', `input[data-picker-id="${pickerId}"]`);
+                    }
+
+
+                })
+
+                if (labels.length > 0) {
+                    table.show();
+                } else {
+                    table.hide();
+                }
+            });
+
+            $(document).on('click', '.delete-btn', function() {
+                const $accordionItem = $(this).closest('.accordion-item');
+                $accordionItem.find('.color-preview').each(function() {
+                    destroyPicker($(this).attr('id'));
+                });
+
+                const productId = $(this).data('product-id');
+                const attributeId = $(this).data('attribute-id');
+
+                if (!attributeId) {
+                    $accordionItem.remove();
+                    return;
+                }
+
+
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "You won't be able to revert this!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, delete it!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: "{{ route('admin.products.attributes.destroy', [':id', ':attribute_id']) }}"
+                                .replace(':id', productId).replace(':attribute_id',
+                                    attributeId),
+                            method: 'DELETE',
+                            data: {
+                                _token: '{{ csrf_token() }}'
+                            },
+                            success: function(response) {
+                                $('#accordion-default').html(response.html);
+                                $('#accordion-variant').html('');
+                                $('#accordion-variant').append(response.variantHtml);
+                                response.html ? $('.disabled-placeholder').show() : $(
+                                    '.disabled-placeholder').hide();
+                                notyf.success(response.message);
+                            },
+                            error: function(xhr, status, error) {
+                                notyf.error(error);
+                            }
+                        })
+                    }
+                });
+
+
+            });
+
+            // save attribute
+            $(document).on('click', '.save-btn', function(e) {
+                e.preventDefault();
+                const form = $(this).closest('form');
+                const data = form.serialize();
+
+                $.ajax({
+                    url: "{{ route('admin.products.attributes.store', ':id') }}".replace(':id',
+                        '{{ $product->id }}'),
+                    method: 'POST',
+                    data: data,
+                    success: function(response) {
+                        $('#accordion-default').html(response.html);
+                        $('#accordion-variant').html('');
+                        $('#accordion-variant').append(response.variantHtml);
+                        response.html ? $('.disabled-placeholder').show() : $(
+                            '.disabled-placeholder').hide();
+
+                        initColorPickersInContainer($('#accordion-default'));
+                        notyf.success(response.message);
+                    },
+                    error: function(xhr, status, error) {
+
+                    }
+                })
+            })
+
+            // Initialize color pickers on load
+            $(document).ready(function() {
+                initColorPickersInContainer($('#accordion-default'));
+            })
+
+            $(document).on('change', '.variant-manage-stock', function() {
+                const isChecked = $(this).is(':checked');
+                const element = $(this).closest('.col-md-12').find('.variant-quantity').toggle(isChecked);
+            })
+
+            // variant update
+            $(document).on('click', '.variant-save-btn', function(e) {
+                e.preventDefault();
+                const form = $(this).closest('.variant-form');
+                const data = form.serialize();
+
+                $.ajax({
+                    url: "{{ route('admin.products.variants.update', ':productId') }}".replace(
+                        ':productId', '{{ $product->id }}'),
+                    method: 'POST',
+                    data: data,
+                    success: function(response) {
+                        notyf.success(response.message);
+                    },
+                    error: function(xhr, status, error) {
+                        const errors = xhr.responseJSON.errors;
+                        $.each(errors, function(key, value) {
+                            notyf.error(errors[key][0]);
+                        });
+                    }
+                })
+            })
+        })
+    </script>
+
+    <script>
         $(document).on('change', '.category-check', function() {
             const isChecked = $(this).is(':checked');
 
