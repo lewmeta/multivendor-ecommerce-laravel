@@ -115,4 +115,8 @@ Route::middleware('auth:admin')->prefix('admin')->as('admin.')->group(function (
     Route::post('/products/images/upload/{product}', [ProductController::class, 'uploadImages'])->name('products.images.upload');
     Route::delete('/products/images/{image}', [ProductController::class, 'destroyImage'])->name('products.images.destroy');
     Route::post('/products/images/reorder', [ProductController::class, 'imagesReorder'])->name('products.images.reorder');
+
+    /** Product attirubutes */
+    Route::post('/products/attributes/{product}/store', [ProductController::class, 'storeAttributes'])->name('products.attributes.store');
+    Route::delete('/products/attributes/{product}/{attribute}', [ProductController::class, 'destroyAttribute'])->name('products.attributes.destroy');
 });
