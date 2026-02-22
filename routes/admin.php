@@ -119,4 +119,8 @@ Route::middleware('auth:admin')->prefix('admin')->as('admin.')->group(function (
     /** Product attirubutes */
     Route::post('/products/attributes/{product}/store', [ProductController::class, 'storeAttributes'])->name('products.attributes.store');
     Route::delete('/products/attributes/{product}/{attribute}', [ProductController::class, 'destroyAttribute'])->name('products.attributes.destroy');
+
+    /** Product Variants Routes */
+    Route::post('products/variants/{product}/udpate', [ProductController::class, 'updateVariants'])->name('products.variants.update');
+
 });

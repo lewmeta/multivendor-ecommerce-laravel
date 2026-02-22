@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ProductStoreRequest;
 use App\Http\Requests\Admin\ProductUpdateRequest;
+use App\Models\Attribute;
+use App\Models\AttributeValue;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
@@ -15,6 +17,7 @@ use App\Services\AlertService;
 use App\Traits\FileUploadTrait;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -120,7 +123,10 @@ class ProductController extends Controller
         $tags = Tag::where('is_active', 1)->get();
         $categories = Category::getNested();
 
-        return view('admin.product.edit', compact('product', 'stores', 'brands', 'tags', 'categories', 'productCategoryIds', 'productTagIds'));
+        $attributeValues = $product?->attributeValues ?? [];
+
+
+        return view('admin.product.edit', compact('product', 'stores', 'brands', 'tags', 'categories', 'productCategoryIds', 'productTagIds', 'attributeValues'));
     }
 
     function update(ProductUpdateRequest $request, int $id)
@@ -198,6 +204,62 @@ class ProductController extends Controller
     {
         foreach ($request->images as $image) {
             ProductImage::where('id', $image['id'])->update(['order' => $image['order']]);
+        }
+    }
+
+    public function storeAtrributes(Request $request, Product $product)
+    {
+        $request->validate([
+            'attribute_name' => ['required', 'string', 'max:255'],
+            'attribute_type' => ['required', 'string', 'in:text,color'],
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            if ($request->filled('attribute_id')) {
+            } else {
+            }
+
+            DB::commit();
+
+            // Regenerate product variants
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function createNewAttribute(Request $request, Product $product)
+    {
+        $attribute = new Attribute();
+        $attribute->name = $request->attribute_name;
+        $attribute->type = $request->attribute_type;
+        $attribute->save();
+
+        $this->addAttributeValue($attribute, $request, $product);
+
+    }
+
+    public function addAttributeValue(Attribute $attribute, Request $request, Product $product)
+    {
+        $labels = $request->label ?? [];
+
+        foreach ($labels as $index => $label) {
+            if (empty($label)) continue;
+
+            $attributeValue = new AttributeValue();
+            $attributeValue->attribute_id = $attribute->id;
+            $attributeValue->value = $label;
+            $attributeValue->color = $request->color_value[$index] ?? null;
+            $attributeValue->save();
+
+            // Link to product;
+            DB::table('product_attribute_values')->insert([
+                'product_id' => $product->id,
+                'attribute_id' => $attribute->id,
+                'attribute_value_id' => $attributeValue->id,
+            ]);
         }
     }
 }

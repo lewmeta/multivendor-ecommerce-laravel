@@ -144,8 +144,8 @@
                     </div>
 
                     <div class="card">
-                        {{-- <div class="disabled-placeholder" style="{{ count($product->attributes) ? '' : 'display: none' }}">
-                        </div> --}}
+                        <div class="disabled-placeholder" style="{{ count($product->attributes) ? '' : 'display: none' }}">
+                        </div>
                         <div class="card-header">
                             Overview
                         </div>
@@ -269,36 +269,36 @@
                         <div class="card-header">
                             <h3 class="card-title">Product Attributes</h3>
                         </div>
-                        {{-- <div class="card-body">
+                        <div class="card-body">
                             <div class="col-md-12">
                                 <div class="accordion" id="accordion-default">
-                                    @foreach ($attributesWithValues as $attribute)
+                                    {{-- @foreach ($attributesWithValues as $attribute)
                                         @include('admin.product.partials.attribute', [
                                             '$attribute' => $attribute,
                                             'product' => $product,
                                         ])
-                                    @endforeach
+                                    @endforeach --}}
                                 </div>
 
                                 <button class="btn btn-primary mt-3" type="button" id="add-attribute-btn">Add
                                     Attribute</button>
                             </div>
-                        </div> --}}
+                        </div>
                     </div>
 
                     <div class="card mt-3" id="product-images">
                         <div class="card-header">
                             <h3 class="card-title">Product Variants</h3>
                         </div>
-                        {{-- <div class="card-body">
+                        <div class="card-body">
                             <div class="col-md-12">
                                 <div class="accordion" id="accordion-variant">
-                                    @foreach ($variants as $variant)
+                                    {{-- @foreach ($variants as $variant)
                                         @include('admin.product.partials.variant', ['variant' => $variant])
-                                    @endforeach
+                                    @endforeach --}}
                                 </div>
                             </div>
-                        </div> --}}
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-4">
