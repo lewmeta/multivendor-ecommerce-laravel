@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -40,5 +41,45 @@ class Product extends Model
     public function images(): HasMany
     {
         return $this->hasMany(ProductImage::class)->orderBy('order');
+    }
+
+    /**
+     * Get the attributes related to this product
+     * 
+     * @return BelongsToMany
+     */
+    public function attributes(): BelongsToMany
+    {
+        return $this->belongsToMany(Attribute::class, 'product_attribute_values')->withPivot('attribute_value_id');
+    }
+
+    /**
+     * Get the attributeValues related to this product
+     * 
+     * @return BelongsToMany
+     */
+    public function attributeValues(): BelongsToMany
+    {
+        return $this->belongsToMany(AttributeValue::class, 'product_attribute_values')->withPivot('attribute_id');
+    }
+
+    /**
+     * Get the attribute with their values related to this product
+     * 
+     * @return BelongsToMany
+     */
+    public function attributeWithValues(): BelongsToMany
+    {
+        return $this->belongsToMany(Attribute::class, 'product_attribute_values')
+        ->distinct()
+        ->orderBy('id', 'asc')
+        ->with(['values' => function ($query) {
+            $query->wherein('id', function($subquery) {
+                $subquery->select('attribute_value_id')
+                ->from('product_attribute_values')
+                ->where('product_id', $this->id)
+                ->orderBy('id', 'asc');
+            });
+        }]);
     }
 }
