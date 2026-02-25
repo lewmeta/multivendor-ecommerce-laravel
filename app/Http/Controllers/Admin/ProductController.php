@@ -193,7 +193,7 @@ class ProductController extends Controller
         ]);
     }
 
-    function destroyImage(int $id)
+    public function destroyImage(int $id)
     {
         $image = ProductImage::findOrFail($id);
         $this->deleteFile($image->path);
@@ -201,7 +201,7 @@ class ProductController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Image deleted successfully']);
     }
 
-    function imagesReorder(Request $request)
+    public function imagesReorder(Request $request)
     {
         foreach ($request->images as $image) {
             ProductImage::where('id', $image['id'])->update(['order' => $image['order']]);
@@ -220,6 +220,7 @@ class ProductController extends Controller
         try {
             if ($request->filled('attribute_id')) {
                 // Update existing attribute
+                $this->updateExistingAttribute($request, $product);
             } else {
                 // Create a new attribute
                 $this->createNewAttribute($request, $product);
@@ -232,6 +233,8 @@ class ProductController extends Controller
             DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 500);
         }
+
+        return $this->buildSuccessResponse($product);
     }
 
     public function createNewAttribute(Request $request, Product $product)
@@ -242,7 +245,31 @@ class ProductController extends Controller
         $attribute->save();
 
         $this->addAttributeValue($attribute, $request, $product);
+    }
 
+    public function updateExistingAttribute(Request $request, Product $product)
+    {
+        $attribute = Attribute::findOrFail($request->attribute_id);
+        $attribute->name = $request->attribute_name;
+        $attribute->type = $request->attribute_type;
+        $attribute->save();
+
+        // Remove existing attribute relations and values
+        $this->clearAttributeData($attribute, $product);
+        $this->addAttributeValue($attribute, $request, $product);
+    }
+
+    public function clearAttributeData(Attribute $attribute, Product $product)
+    {
+        // Detach attribute values from product
+        DB::table('product_attribute_values')
+            ->where('product_id', $product->id)
+            ->where('attribute_id', $attribute->id)
+            ->delete();
+
+        // Delete attribute values
+        AttributeValue::where('attribute_id', $attribute->id)
+            ->delete();
     }
 
     public function addAttributeValue(Attribute $attribute, Request $request, Product $product)
@@ -265,5 +292,24 @@ class ProductController extends Controller
                 'attribute_value_id' => $attributeValue->id,
             ]);
         }
+    }
+
+    public function buildSuccessResponse(Product $product)
+    {
+        $product->refresh();
+        $attributes = $product->attributesWithValues;
+
+        $html = '';
+        // $variantHtml = '';
+
+        // Build HTML for attributes and variants
+        foreach ($attributes as $attribute) {
+            $html .= view('admin.product.partials.attribute', compact('attribute', 'product'))->render();
+        }
+
+        return response()->json([
+            'message' => 'Attribute generated',
+            'html' => $html,
+        ]);
     }
 }
