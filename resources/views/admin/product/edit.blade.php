@@ -272,12 +272,12 @@
                         <div class="card-body">
                             <div class="col-md-12">
                                 <div class="accordion" id="accordion-default">
-                                    {{-- @foreach ($attributesWithValues as $attribute)
+                                    @foreach ($attributesWithValues as $attribute)
                                         @include('admin.product.partials.attribute', [
                                             '$attribute' => $attribute,
                                             'product' => $product,
                                         ])
-                                    @endforeach --}}
+                                    @endforeach
                                 </div>
 
                                 <button class="btn btn-primary mt-3" type="button" id="add-attribute-btn">Add

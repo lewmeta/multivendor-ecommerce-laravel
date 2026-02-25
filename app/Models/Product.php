@@ -68,7 +68,7 @@ class Product extends Model
      * 
      * @return BelongsToMany
      */
-    public function attributeWithValues(): BelongsToMany
+    public function attributesWithValues(): BelongsToMany
     {
         return $this->belongsToMany(Attribute::class, 'product_attribute_values')
         ->distinct()

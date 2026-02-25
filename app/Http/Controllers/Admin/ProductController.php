@@ -123,10 +123,11 @@ class ProductController extends Controller
         $tags = Tag::where('is_active', 1)->get();
         $categories = Category::getNested();
 
-        $attributeValues = $product?->attributeValues ?? [];
+        $attributesWithValues = $product?->attributesWithValues ?? [];
+        // dd($attributesWithValues);
 
 
-        return view('admin.product.edit', compact('product', 'stores', 'brands', 'tags', 'categories', 'productCategoryIds', 'productTagIds', 'attributeValues'));
+        return view('admin.product.edit', compact('product', 'stores', 'brands', 'tags', 'categories', 'productCategoryIds', 'productTagIds', 'attributesWithValues'));
     }
 
     function update(ProductUpdateRequest $request, int $id)
@@ -207,7 +208,7 @@ class ProductController extends Controller
         }
     }
 
-    public function storeAtrributes(Request $request, Product $product)
+    public function storeAttributes(Request $request, Product $product)
     {
         $request->validate([
             'attribute_name' => ['required', 'string', 'max:255'],
@@ -218,7 +219,10 @@ class ProductController extends Controller
 
         try {
             if ($request->filled('attribute_id')) {
+                // Update existing attribute
             } else {
+                // Create a new attribute
+                $this->createNewAttribute($request, $product);
             }
 
             DB::commit();
