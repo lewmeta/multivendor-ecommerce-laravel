@@ -293,9 +293,9 @@
                         <div class="card-body">
                             <div class="col-md-12">
                                 <div class="accordion" id="accordion-variant">
-                                    {{-- @foreach ($variants as $variant)
+                                    @foreach ($variants as $variant)
                                         @include('admin.product.partials.variant', ['variant' => $variant])
-                                    @endforeach --}}
+                                    @endforeach
                                 </div>
                             </div>
                         </div>

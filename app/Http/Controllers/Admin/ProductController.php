@@ -11,12 +11,14 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductImage;
+use App\Models\ProductVariant;
 use App\Models\Store;
 use App\Models\Tag;
 use App\Services\AlertService;
 use App\Traits\FileUploadTrait;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
@@ -311,5 +313,170 @@ class ProductController extends Controller
             'message' => 'Attribute generated',
             'html' => $html,
         ]);
+    }
+
+    public function destroyAttribute(int $productId, int $attributeId)
+    {
+        try {
+            $product = Product::findOrFail($productId);
+            $attribute = Attribute::findOrFail($attributeId);
+
+            $this->clearAttributeData($attribute, $product);
+
+            // Regenerate product variants
+            $this->regenerateProductVariants($product);
+
+            $product->refresh();
+
+            $attributes = $product->attributesWithValues;
+            $attribute->delete();
+
+            $html = '';
+            $variantHtml = '';
+
+            foreach ($attributes as $attribute) {
+                $html .= view('admin.product.partials.attribute', compact('attribute', 'product'))->render();
+            }
+
+            foreach ($product->variants as $variant) {
+                $variantHtml .= view('admin.product.partials.variant', compact('variant'))->render();
+            }
+
+            return response()->json([
+                'message' => 'Attribute deleted successfully',
+                'html' => $html,
+                'variantHtml' => $variantHtml,
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()]);
+        }
+    }
+
+    public function regenerateProductVariants(Product $product)
+    {
+        // Clear existing variants
+        $this->clearExistingVariants($product);
+
+        // Get current attribute values group by attributes
+        $attributeGroups = $this->getAttributeGroups($product);
+
+        if ($attributeGroups->isEmpty()) {
+            return;
+        }
+
+        $combinations = $this->cartesianProduct($attributeGroups);
+        $this->createVariantsFromCombinations($product, $combinations);
+    }
+
+    public function getAttributeGroups(Product $product): Collection
+    {
+        $groupedAttributes = DB::table('product_attribute_values')
+            ->where('product_id', $product->id)
+            ->get()
+            ->group('attribute_id');
+
+        $attributeGroups = collect();
+
+        foreach ($groupedAttributes as $attributeId => $items) {
+            $attributeValues = AttributeValue::whereIn('id', $items
+                ->pluck('attribute_value_id'))
+                ->get();
+            $attributeGroups->push($attributeValues);
+        }
+
+        return $attributeGroups;
+    }
+
+    public function cartesianProduct(Collection $attributeGroups)
+    {
+        $result = [[]];
+
+        foreach ($attributeGroups as $attributeValues) {
+            $temp = [];
+
+            foreach ($result as $resultItem) {
+                foreach ($attributeValues as $attributeValue) {
+                    $temp[] = array_merge($resultItem, [$attributeValue]);
+                }
+            }
+
+            $result = $temp;
+        }
+
+        return $result;
+    }
+
+    public function createVariantsFromCombinations(Product $product, array $combinations)
+    {
+        foreach ($combinations as $combination) {
+            $variant = $this->createSingleVariant($product, $combination);
+
+            $this->attachAttributesToVariant($variant, $combination);
+        }
+    }
+
+    public function createSingleVariant(Product $product, array $combination)
+    {
+        $variantName = collect($combination)->pluck('value')->implode('/');
+
+        return ProductVariant::create([
+            'product_id' => $product->id,
+            'name' => $variantName,
+            'price' => 0,
+            'sku' => '',
+            'qty' => 0,
+            'is_active' => 1,
+        ]);
+    }
+
+    public function attachAttributesToVariant(ProductVariant $variant, array $combination)
+    {
+        foreach ($combination as $attributeValue) {
+            DB::table('product_variant_attribute_value')
+                ->insert([
+                    'product_variant_id' => $variant->id,
+                    'attribute_id' => $attributeValue->attribute_id,
+                    'attribute_value_id' => $attributeValue->id,
+                ]);
+        }
+    }
+
+    public function updateVariants(Request $request, int $productId)
+    {
+        $request->validate([
+            'variant_sku' => ['nullable', 'string', 'max:255'],
+            'variant_price' => ['required', 'numeric'],
+            'variant_special_price' => ['nullable', 'numeric'],
+            'variant_manage_stock' => ['nullable', 'numeric'],
+            'variant_quantity' => ['nullable', 'numeric'],
+            'variant_stock_status' => ['required', 'in:in_stock,out_of_stock'],
+            'variant_is_default' => ['nullable'],
+            'variant_is_active' => ['nullable'],
+        ]);
+
+        $product = Product::findOrFail($productId);
+
+        $variant = ProductVariant::findOrFail($request->variant_id);
+        $variant->sku = $request->variant_sku;
+        $variant->price = $request->variant_price;
+        $variant->special_price = $request->variant_special_price;
+        $variant->manage_stock = $request->variant_manage_stock;
+        $variant->qty = $request->varaint_stock_status === 'in_stock' ? 1 : 0;
+        $variant->is_active = $request->variant_is_active;
+        $variant->is_default = $request->variant_is_default;
+        $variant->save();
+
+        return response()->json(['message' => 'Variant updated.']);
+    }
+
+    public function clearExistingVariants(Product $product)
+    {
+        foreach ($product->variants as $variant) {
+            DB::table('product_variant_attribute_value')
+                ->where('product_variant_id', $variant->id)
+                ->delete();
+
+            $variant->delete();
+        }
     }
 }
