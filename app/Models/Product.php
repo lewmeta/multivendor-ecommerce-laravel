@@ -68,18 +68,28 @@ class Product extends Model
      * 
      * @return BelongsToMany
      */
-    public function attributeWithValues(): BelongsToMany
+    public function attributesWithValues(): BelongsToMany
     {
         return $this->belongsToMany(Attribute::class, 'product_attribute_values')
-        ->distinct()
-        ->orderBy('id', 'asc')
-        ->with(['values' => function ($query) {
-            $query->wherein('id', function($subquery) {
-                $subquery->select('attribute_value_id')
-                ->from('product_attribute_values')
-                ->where('product_id', $this->id)
-                ->orderBy('id', 'asc');
-            });
-        }]);
+            ->distinct()
+            ->orderBy('id', 'asc')
+            ->with(['values' => function ($query) {
+                $query->wherein('id', function ($subquery) {
+                    $subquery->select('attribute_value_id')
+                        ->from('product_attribute_values')
+                        ->where('product_id', $this->id)
+                        ->orderBy('id', 'asc');
+                });
+            }]);
+    }
+
+    /**
+     * Get the variants associated with this product
+     * 
+     * @return HasMany
+     */
+    public function variants(): HasMany
+    {
+        return $this->hasMany(ProductVariant::class);
     }
 }
