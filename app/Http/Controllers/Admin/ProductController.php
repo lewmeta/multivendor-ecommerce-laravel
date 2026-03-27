@@ -125,11 +125,12 @@ class ProductController extends Controller
         $tags = Tag::where('is_active', 1)->get();
         $categories = Category::getNested();
 
+        $variants = $product?->variant ?? [];
         $attributesWithValues = $product?->attributesWithValues ?? [];
         // dd($attributesWithValues);
 
 
-        return view('admin.product.edit', compact('product', 'stores', 'brands', 'tags', 'categories', 'productCategoryIds', 'productTagIds', 'attributesWithValues'));
+        return view('admin.product.edit', compact('product', 'stores', 'brands', 'tags', 'categories', 'productCategoryIds', 'productTagIds', 'attributesWithValues', 'variants'));
     }
 
     function update(ProductUpdateRequest $request, int $id)
@@ -302,16 +303,21 @@ class ProductController extends Controller
         $attributes = $product->attributesWithValues;
 
         $html = '';
-        // $variantHtml = '';
+        $variantHtml = '';
 
         // Build HTML for attributes and variants
         foreach ($attributes as $attribute) {
             $html .= view('admin.product.partials.attribute', compact('attribute', 'product'))->render();
         }
 
+        foreach ($product->variants as $variant) {
+            $variantHtml .= view('admin.product.partials.variant', compact('variant'))->render();
+        }
+
         return response()->json([
             'message' => 'Attribute generated',
             'html' => $html,
+            'variantHtml' => $variantHtml,
         ]);
     }
 
